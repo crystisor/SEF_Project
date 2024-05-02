@@ -77,9 +77,9 @@ public class RegistrationForm extends JDialog{
         final String PASSWORD = "";
 
         try {
-            Connection conn = DriverManager.getConnection(DB_URL,USERNAME,PASSWORD);
+            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
             Statement st = conn.createStatement();
-            String query = "INSERT INTO user (firstname,lastname,email,phone,address,password)" +
+            String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
                     "VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
