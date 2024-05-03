@@ -37,7 +37,7 @@ public class LoginForm extends JDialog{
                     if(isRoot){
                         System.out.println("Logged as root");
                         dispose();
-                        //AdminForm adminForm = new AdminForm(LoginForm.this);
+                        AdminForm adminForm = new AdminForm(LoginForm.this);
                     }
                     else if (canLogin){
                         System.out.println("Logged as user");

@@ -23,8 +23,11 @@ public class AdminForm extends JDialog
     private JLabel userCount;
     private JTextField tfSearch;
     private JTextArea tfaSearch;
+    private JTextField tfAddBookName;
+    private JTextField tfAddBookAuthor;
+    private JTextField tfAddBookPrice;
 
-    public AdminForm(JFrame parent)
+    public AdminForm(JDialog parent)
     {
         super(parent);
         setTitle("Root");
@@ -47,7 +50,7 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-
+                displayAdder();
             }
         });
         btnOrders.addActionListener(new ActionListener()
@@ -98,6 +101,59 @@ public class AdminForm extends JDialog
             e.printStackTrace();
         }
         return false;
+    }
+    private void displayAdder()
+    {
+        JPanel addBookPanel = new JPanel();
+        addBookPanel.setLayout(new BoxLayout(addBookPanel,BoxLayout.Y_AXIS));
+
+        tfAddBookName = new JTextField();
+        tfAddBookAuthor = new JTextField();
+        tfAddBookPrice = new JTextField();
+        addBookPanel.add(tfAddBookName);
+        addBookPanel.add(tfAddBookAuthor);
+        addBookPanel.add(tfAddBookPrice);
+        JOptionPane.showMessageDialog(this, addBookPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
+        try
+        {
+            int price = Integer.parseInt(tfAddBookPrice.getText());
+            addBook(615415, tfAddBookName.getText(), tfAddBookAuthor.getText(), price, false);
+        }
+        catch (NumberFormatException e)
+        {
+            System.err.println("Input is not a valid integer: " + tfAddBookPrice.getText());
+        }
+    }
+    private void addBook(long ISBN, String bookName, String bookAuthor, int price, boolean borrowed)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
+
+            Statement st = conn.createStatement();
+            String query = "INSERT INTO Books (ISBN, Name, Author, Price, Borrowed) VALUES (?, ?, ?, ?, ?)";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, String.valueOf(ISBN));
+            ps.setString(2, bookName);
+            ps.setString(3, bookAuthor);
+            ps.setInt(4, price);
+            ps.setBoolean(5, borrowed);
+
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0)
+            {
+                System.out.println("Book added");
+            }
+            else
+                System.out.println("Failed to add book");
+            ps.close();
+            conn.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
     public static void main(String[] args)
     {
