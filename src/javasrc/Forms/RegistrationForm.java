@@ -23,7 +23,7 @@ public class RegistrationForm extends JDialog{
     private JPanel RegisterPanel;
     private JTextField tfAddress;
 
-    public RegistrationForm(JFrame parent) {
+    public RegistrationForm(JDialog parent) {
         super(parent);
         setTitle("Registration Form");
         setContentPane(RegisterPanel);
@@ -82,7 +82,8 @@ public class RegistrationForm extends JDialog{
 
         hasRegisteredUser = false;
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://25.19.87.249:3306/sef_project", "sx3", "Q2@@wertyuiop");
+            Connection conn = DriverManager.getConnection
+                    ("jdbc:mysql://25.19.87.249:3306/sef_project", "sx3", "Q2@@wertyuiop");
             Statement st = conn.createStatement();
             String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
                     "VALUES (?, ?, ?, ?, ?, ?)";
