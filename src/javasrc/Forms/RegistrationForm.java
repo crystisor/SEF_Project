@@ -1,4 +1,6 @@
-package javasrc;
+package javasrc.Forms;
+
+import javasrc.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,7 +62,7 @@ public class RegistrationForm extends JDialog{
 
         if( user.isValidUser() != 0 ) {
             JOptionPane.showMessageDialog(this,
-                    "Please enter valid data" + user.isValidUser(),
+                    "Please enter valid data " + user.isValidUser(),
                     "Try again",JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -80,18 +82,18 @@ public class RegistrationForm extends JDialog{
 
         hasRegisteredUser = false;
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://25.19.87.249:3306/sef_project", "sx3", "Q2@@wertyuiop");
             Statement st = conn.createStatement();
             String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
                     "VALUES (?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1,user.firstName);
-            preparedStatement.setString(2,user.lastName);
-            preparedStatement.setString(3,user.email);
-            preparedStatement.setString(4,user.address);
-            preparedStatement.setString(5,user.phone);
-            preparedStatement.setString(6,user.password);
+            preparedStatement.setString(1,user.getFirstName());
+            preparedStatement.setString(2,user.getLastName());
+            preparedStatement.setString(3,user.getEmail());
+            preparedStatement.setString(4,user.getAddress());
+            preparedStatement.setString(5,user.getPhone());
+            preparedStatement.setString(6,user.getPassword());
 
             int addedRows = preparedStatement.executeUpdate();
             if( addedRows > 0 ) {

@@ -1,4 +1,4 @@
-package javasrc;
+package javasrc.Entities;
 
 public class Book
 {
