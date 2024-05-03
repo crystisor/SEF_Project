@@ -33,7 +33,14 @@ public class LoginForm extends JDialog{
                     String password = String.valueOf(pfPassword.getPassword());
 
                     boolean canLogin = getUser(email,password);
-                    if(canLogin){
+                    boolean isRoot = isRoot(email, password);
+                    if(isRoot){
+                        System.out.println("Logged as root");
+                        dispose();
+                        //AdminForm adminForm = new AdminForm(LoginForm.this);
+                    }
+                    else if (canLogin){
+                        System.out.println("Logged as user");
                         dispose();
                     }
                     else {
@@ -54,20 +61,24 @@ public class LoginForm extends JDialog{
         btnRegister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    RegistrationForm registrationForm = new RegistrationForm(LoginForm.this);
+                dispose();
+                RegistrationForm registrationForm = new RegistrationForm(LoginForm.this);
             }
         });
 
         setVisible(true);
     }
 
+    private boolean isRoot(String email, String password){
+        return email.equals("root") && password.equals("root");
+    }
     private boolean getUser(String email, String password) {
 
         boolean canLogin = false;
 
         try {
             Connection conn = DriverManager.getConnection
-                    ("jdbc:mysql://25.19.87.249:3306/sef_project", "sx3", "Q2@@wertyuiop");
+                    ("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
 
             Statement st = conn.createStatement();
             String query = "SELECT * FROM Users WHERE email=? AND password=?";
