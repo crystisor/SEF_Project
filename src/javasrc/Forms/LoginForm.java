@@ -55,7 +55,6 @@ public class LoginForm extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                     RegistrationForm registrationForm = new RegistrationForm(LoginForm.this);
-                    //registrationForm.setVisible(true);
             }
         });
 
