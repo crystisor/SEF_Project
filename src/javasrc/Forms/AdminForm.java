@@ -1,9 +1,12 @@
 package javasrc.Forms;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 
 public class AdminForm extends JDialog
@@ -26,6 +29,7 @@ public class AdminForm extends JDialog
     private JTextField tfAddBookName;
     private JTextField tfAddBookAuthor;
     private JTextField tfAddBookPrice;
+    private JLabel imageLabel;
 
     public AdminForm(JDialog parent)
     {
@@ -75,7 +79,18 @@ public class AdminForm extends JDialog
         searchPanel.add(scrollPane);
 
         JOptionPane.showMessageDialog(this, searchPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
-        search(tfSearch.getText());
+        ImageIcon icon = null;
+        if (search(tfSearch.getText()))
+        {
+            icon = displayImage();
+            if (icon != null)
+            {
+                imageLabel = new JLabel();
+                imageLabel.setIcon(icon);
+                searchPanel.add(imageLabel);
+                JOptionPane.showMessageDialog(this, imageLabel, "Test Image Display", JOptionPane.PLAIN_MESSAGE);
+            }
+        }
     }
     private boolean search(String bookName) // for text field
     {
@@ -102,6 +117,25 @@ public class AdminForm extends JDialog
         }
         return false;
     }
+    private ImageIcon displayImage()
+    {
+        try
+        {
+            // Load the image from the project directory
+            File imageFile = new File("/home/cristi/Desktop/School/SEF/SEF_Project/src/res/AppImages/colt_alb.jpg");
+            Image image = ImageIO.read(imageFile);
+            ImageIcon icon = new ImageIcon(image);
+
+            // Set the image to the JLabel
+            return icon;
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to load image.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
+    }
     private void displayAdder()
     {
         JPanel addBookPanel = new JPanel();
@@ -117,7 +151,7 @@ public class AdminForm extends JDialog
         try
         {
             int price = Integer.parseInt(tfAddBookPrice.getText());
-            addBook(615415, tfAddBookName.getText(), tfAddBookAuthor.getText(), price, false);
+            addBook(33, tfAddBookName.getText(), tfAddBookAuthor.getText(), price, false);
         }
         catch (NumberFormatException e)
         {
