@@ -4,13 +4,17 @@ public class Book
 {
     private String name;
     private String author;
-    private String isbn;
+    private long isbn;
+    private int Price;
+    private int Quantity;
 
-    public Book(String name, String author, String isbn)
+    public Book(String name, String author, long isbn, int quantity,int price)
     {
         this.name = name;
         this.author = author;
         this.isbn = isbn;
+        this.Price = price;
+        this.Quantity = quantity;
     }
 
     public String getName()
@@ -33,12 +37,12 @@ public class Book
         this.author = author;
     }
 
-    public String getIsbn()
+    public long getIsbn()
     {
         return isbn;
     }
 
-    public void setIsbn(String isbn)
+    public void setIsbn(long isbn)
     {
         this.isbn = isbn;
     }

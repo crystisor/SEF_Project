@@ -34,6 +34,9 @@ public class AdminForm extends JDialog
     private JLabel labelAddBookAuthor;
     private JLabel labelAddBookPrice;
     private JLabel labelSearchBook;
+    private JLabel labelAddBookQuantity;
+    private JTextField tfAddBookQuantity;
+    private JTextField tfAddBookIsbn;
 
     public AdminForm(JDialog parent)
     {
@@ -149,6 +152,9 @@ public class AdminForm extends JDialog
         JPanel addBookPanel = new JPanel();
         addBookPanel.setLayout(new BoxLayout(addBookPanel,BoxLayout.Y_AXIS));
 
+        JLabel labelAddBookIsbn = new JLabel("Book ISBN: ");
+        tfAddBookIsbn = new JTextField();
+
         labelAddBookName = new JLabel("Book Name: ");
         tfAddBookName = new JTextField();
 
@@ -158,24 +164,34 @@ public class AdminForm extends JDialog
         labelAddBookPrice = new JLabel("Book Price: ");
         tfAddBookPrice = new JTextField();
 
+        labelAddBookQuantity = new JLabel("Book Quantity: ");
+        tfAddBookQuantity = new JTextField();
+
+        addBookPanel.add(labelAddBookIsbn);
+        addBookPanel.add(tfAddBookIsbn);
         addBookPanel.add(labelAddBookName);
         addBookPanel.add(tfAddBookName);
         addBookPanel.add(labelAddBookAuthor);
         addBookPanel.add(tfAddBookAuthor);
         addBookPanel.add(labelAddBookPrice);
         addBookPanel.add(tfAddBookPrice);
+        addBookPanel.add(labelAddBookQuantity);
+        addBookPanel.add(tfAddBookQuantity);
+
         JOptionPane.showMessageDialog(this, addBookPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
         try
         {
             int price = Integer.parseInt(tfAddBookPrice.getText());
-            addBook(33, tfAddBookName.getText(), tfAddBookAuthor.getText(), price, false);
+            int quantity = Integer.parseInt(tfAddBookQuantity.getText());
+            long isbn = Long.parseLong(tfAddBookIsbn.getText());
+            addBook( isbn , tfAddBookName.getText(), tfAddBookAuthor.getText(), price, quantity );
         }
         catch (NumberFormatException e)
         {
             System.err.println("Input is not a valid integer: " + tfAddBookPrice.getText());
         }
     }
-    private void addBook(long ISBN, String bookName, String bookAuthor, int price, boolean borrowed)
+    private void addBook(long isbn, String bookName, String bookAuthor, int price, int quantity)
     {
         try
         {
@@ -185,11 +201,11 @@ public class AdminForm extends JDialog
             String query = "INSERT INTO Books (ISBN, Name, Author, Price, Borrowed) VALUES (?, ?, ?, ?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, String.valueOf(ISBN));
+            ps.setLong(1, isbn );
             ps.setString(2, bookName);
             ps.setString(3, bookAuthor);
             ps.setInt(4, price);
-            ps.setBoolean(5, borrowed);
+            ps.setInt(5, quantity);
 
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0)
