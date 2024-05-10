@@ -30,9 +30,10 @@ public class AdminForm extends JDialog
     private JTextField tfAddBookAuthor;
     private JTextField tfAddBookPrice;
     private JLabel imageLabel;
-    private JLabel labelBookName;
-    private JLabel labelBookAuthor;
-    private JLabel labelBookPrice;
+    private JLabel labelAddBookName;
+    private JLabel labelAddBookAuthor;
+    private JLabel labelAddBookPrice;
+    private JLabel labelSearchBook;
 
     public AdminForm(JDialog parent)
     {
@@ -75,8 +76,12 @@ public class AdminForm extends JDialog
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new BoxLayout(searchPanel,BoxLayout.Y_AXIS));
 
+        labelSearchBook = new JLabel("Please enter the book's name: ");
         tfSearch = new JTextField();
+
+        searchPanel.add(labelSearchBook);
         searchPanel.add(tfSearch);
+
         tfaSearch = new JTextArea(10, 30);
         JScrollPane scrollPane = new JScrollPane(tfaSearch);
         searchPanel.add(scrollPane);
@@ -144,20 +149,20 @@ public class AdminForm extends JDialog
         JPanel addBookPanel = new JPanel();
         addBookPanel.setLayout(new BoxLayout(addBookPanel,BoxLayout.Y_AXIS));
 
-        labelBookName = new JLabel("Book Name: ");
+        labelAddBookName = new JLabel("Book Name: ");
         tfAddBookName = new JTextField();
 
-        labelBookAuthor = new JLabel("Book Author: ");
+        labelAddBookAuthor = new JLabel("Book Author: ");
         tfAddBookAuthor = new JTextField();
 
-        labelBookPrice = new JLabel("Book Price: ");
+        labelAddBookPrice = new JLabel("Book Price: ");
         tfAddBookPrice = new JTextField();
 
-        addBookPanel.add(labelBookName);
+        addBookPanel.add(labelAddBookName);
         addBookPanel.add(tfAddBookName);
-        addBookPanel.add(labelBookAuthor);
+        addBookPanel.add(labelAddBookAuthor);
         addBookPanel.add(tfAddBookAuthor);
-        addBookPanel.add(labelBookPrice);
+        addBookPanel.add(labelAddBookPrice);
         addBookPanel.add(tfAddBookPrice);
         JOptionPane.showMessageDialog(this, addBookPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
         try
