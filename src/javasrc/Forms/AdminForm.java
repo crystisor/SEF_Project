@@ -22,8 +22,6 @@ public class AdminForm extends JDialog
     private JLabel Books;
     private JLabel Users;
     private JLabel orderCount;
-    private JLabel bookCount;
-    private JLabel userCount;
     private JTextField tfSearch;
     private JTextArea tfaSearch;
     private JTextField tfAddBookName;
