@@ -1,6 +1,7 @@
 package javasrc.Forms;
 
 import com.mysql.cj.log.Log;
+import javasrc.Entities.PasswordUtil;
 import javasrc.Entities.User;
 
 import javax.swing.*;
@@ -61,7 +62,6 @@ public class LoginForm extends JDialog{
         btnRegister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 RegistrationForm registrationForm = new RegistrationForm(LoginForm.this);
             }
         });
@@ -81,22 +81,16 @@ public class LoginForm extends JDialog{
                     ("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
 
             Statement st = conn.createStatement();
-            String query = "SELECT * FROM Users WHERE email=? AND password=?";
+            String query = "SELECT email, password FROM Users WHERE email=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1,email);
-            ps.setString(2,password);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();;
 
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()) {
-                User user = new User(rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("email"),
-                        rs.getString("address"),
-                        rs.getString("phone_number"),
-                        rs.getString("password"));
-                        canLogin = true;
+            if (rs.next())
+            {
+                if (PasswordUtil.checkPassword(password, rs.getString("password")))
+                canLogin = true;
             }
 
             st.close();

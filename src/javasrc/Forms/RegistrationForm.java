@@ -1,15 +1,16 @@
 package javasrc.Forms;
 
-import javasrc.Entities.User;
+import org.mindrot.jbcrypt.BCrypt;
 
+import javasrc.Entities.PasswordUtil;
+import javasrc.Entities.User;
+import javafx.util.Pair;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.security.PrivateKey;
+import java.sql.*;
 
 public class RegistrationForm extends JDialog{
     private JPasswordField pfPassword;
@@ -36,6 +37,8 @@ public class RegistrationForm extends JDialog{
             @Override
             public void actionPerformed(ActionEvent e) {
                 registerUser();
+                dispose();
+                //LoginForm loginFormForm = new LoginForm(LoginForm.this);
             }
         });
 
@@ -49,7 +52,8 @@ public class RegistrationForm extends JDialog{
         setVisible(true);
     }
 
-    private void registerUser() {
+    private void registerUser()
+    {
         String firstName = tfFirstName.getText();
         String lastName = tfLastName.getText();
         String email = tfEmail.getText();
@@ -57,50 +61,62 @@ public class RegistrationForm extends JDialog{
         String phone = tfPhone.getText();
         String password = String.valueOf(pfPassword.getPassword());
         String confirmPassword = String.valueOf(pfConfirmPassword.getPassword());
+        String encryptedPassword;
 
-        User user = new User(firstName,lastName,email,address,phone,password);
+        try
+        {
+            encryptedPassword = PasswordUtil.hashPassword(password);
 
-        if( user.isValidUser() != 0 ) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter valid data " + user.isValidUser(),
-                    "Try again",JOptionPane.ERROR_MESSAGE);
-            return;
+            User user = new User(firstName, lastName, email, address, phone, password);
+
+            if (user.isValidUser() != 0)
+            {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter valid data " + user.isValidUser(),
+                        "Try again", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!password.equals(confirmPassword))
+            {
+                JOptionPane.showMessageDialog(this,
+                        "Passwords do not match",
+                        "Try again", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            boolean registered = addUserToDatabase(user, encryptedPassword);
         }
-
-        if( !password.equals(confirmPassword) ) {
-            JOptionPane.showMessageDialog(this,
-                    "Passwords do not match",
-                    "Try again",JOptionPane.ERROR_MESSAGE);
-            return;
+        catch(Exception e)
+        {
+            e.printStackTrace();
         }
-
-       boolean registered = addUserToDatabase(user);
     }
 
     boolean hasRegisteredUser;
-    private boolean addUserToDatabase(User user) {
+    private boolean addUserToDatabase(User user, String encryptedPassword) {
 
         hasRegisteredUser = false;
         try {
             Connection conn = DriverManager.getConnection
-                    ("jdbc:mysql://25.19.87.249:3306/sef_project", "sx3", "Q2@@wertyuiop");
+                    ("jdbc:mysql://127.0.0.1/sef_project", "cristi", "qwertyuiop");
             Statement st = conn.createStatement();
             String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
                     "VALUES (?, ?, ?, ?, ?, ?)";
 
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setString(1,user.getFirstName());
-            preparedStatement.setString(2,user.getLastName());
-            preparedStatement.setString(3,user.getEmail());
-            preparedStatement.setString(4,user.getAddress());
-            preparedStatement.setString(5,user.getPhone());
-            preparedStatement.setString(6,user.getPassword());
+            PreparedStatement insertUserStatement = conn.prepareStatement(query);
+            insertUserStatement.setString(1,user.getFirstName());
+            insertUserStatement.setString(2,user.getLastName());
+            insertUserStatement.setString(3,user.getEmail());
+            insertUserStatement.setString(4,user.getAddress());
+            insertUserStatement.setString(5,user.getPhone());
+            insertUserStatement.setString(6,encryptedPassword);
+            int addedRowsUser = insertUserStatement.executeUpdate();
 
-            int addedRows = preparedStatement.executeUpdate();
-            if( addedRows > 0 ) {
+            if (addedRowsUser > 0)
+            {
                 hasRegisteredUser = true;
             }
-
             st.close();
             conn.close();
 
@@ -109,7 +125,6 @@ public class RegistrationForm extends JDialog{
         }
         return hasRegisteredUser;
     }
-
     public static void main(String[] args) {
         RegistrationForm frm = new RegistrationForm(null);
         boolean registered = frm.hasRegisteredUser;
