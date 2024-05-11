@@ -1,9 +1,9 @@
-package javasrc;
+package org.project.Services;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Service {
+public class UserService {
 
     public boolean isEmailValid(String email) {
         // Regular expression pattern for email validation

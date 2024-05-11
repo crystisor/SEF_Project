@@ -1,5 +1,5 @@
 package org.project.Entities;
-import javasrc.Service;
+import org.project.Services.UserService;
 
 public class User {
     String firstName;
@@ -20,7 +20,7 @@ public class User {
 
     public int isValidUser(){
 
-        Service srv = new Service();
+        UserService srv = new UserService();
         if( this.firstName.length()<3 || this.lastName.length()<3){
             return 1;
         }
