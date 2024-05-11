@@ -11,6 +11,9 @@ import java.sql.*;
 
 public class AdminForm extends JDialog
 {
+    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
+    private static final String dbUser = "sx3";
+    private static final String dbPassword ="Q2@@wertyuiop";
 
     private JButton btnOrderView;
     private JButton btnSearch;
@@ -22,8 +25,7 @@ public class AdminForm extends JDialog
     private JLabel Books;
     private JLabel Users;
     private JLabel orderCount;
-    private JLabel bookCount;
-    private JLabel userCount;
+    private JLabel userCountLabel;
     private JTextField tfSearch;
     private JTextArea tfaSearch;
     private JTextField tfAddBookName;
@@ -47,6 +49,8 @@ public class AdminForm extends JDialog
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        countUsers();
 
         btnSearch.addActionListener(new ActionListener()
         {
@@ -74,6 +78,33 @@ public class AdminForm extends JDialog
         });
         setVisible(true);
     }
+
+    private void countUsers(){
+        try {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "SELECT COUNT(*) AS userCount FROM Users";
+
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                int userCount = rs.getInt("userCount");
+                System.out.println("Number of users: " + userCount);
+
+                userCountLabel.setText("Active users: " + userCount);
+            } else {
+                System.out.println("No users found");
+            }
+
+            rs.close();
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void displayBrowser()
     {
         JPanel searchPanel = new JPanel();
@@ -107,7 +138,7 @@ public class AdminForm extends JDialog
     {
         try
         {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://25.19.87.249/sef_project", "sx3", "Q2@@wertyuiop");
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
             String query = "SELECT * FROM Books WHERE Name=?";
@@ -195,10 +226,10 @@ public class AdminForm extends JDialog
     {
         try
         {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
-            String query = "INSERT INTO Books (ISBN, Name, Author, Price, Borrowed) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Books (ISBN, Name, Author, Price, Quantity) VALUES (?, ?, ?, ?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setLong(1, isbn );

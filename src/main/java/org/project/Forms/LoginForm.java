@@ -70,6 +70,7 @@ public class LoginForm extends JDialog{
     private boolean isRoot(String email, String password){
         return email.equals("root") && password.equals("root");
     }
+
     private boolean getUser(String email, String password) {
 
         boolean canLogin = false;
