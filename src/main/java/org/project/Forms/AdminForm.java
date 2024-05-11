@@ -222,6 +222,7 @@ public class AdminForm extends JDialog
             System.err.println("Input is not a valid integer: " + tfAddBookPrice.getText());
         }
     }
+    
     private void addBook(long isbn, String bookName, String bookAuthor, int price, int quantity)
     {
         try
