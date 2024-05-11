@@ -107,7 +107,7 @@ public class AdminForm extends JDialog
     {
         try
         {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://25.19.87.249/sef_project", "sx3", "Q2@@wertyuiop");
 
             Statement st = conn.createStatement();
             String query = "SELECT * FROM Books WHERE Name=?";
@@ -133,7 +133,7 @@ public class AdminForm extends JDialog
         try
         {
             // Load the image from the project directory
-            File imageFile = new File("/home/cristi/Desktop/School/SEF/SEF_Project/src/res/AppImages/colt_alb.jpg");
+            File imageFile = new File("res/AppImages/colt_alb.jpg");
             Image image = ImageIO.read(imageFile);
             ImageIcon icon = new ImageIcon(image);
 

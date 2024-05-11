@@ -76,7 +76,7 @@ public class LoginForm extends JDialog{
 
         try {
             Connection conn = DriverManager.getConnection
-                    ("jdbc:mysql://127.0.0.1:3306/sef_project", "cristi", "qwertyuiop");
+                    ("jdbc:mysql://25.19.87.249/sef_project", "sx3", "Q2@@wertyuiop");
 
             Statement st = conn.createStatement();
             String query = "SELECT email, password FROM Users WHERE email=?";
