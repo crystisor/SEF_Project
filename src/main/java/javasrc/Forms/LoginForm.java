@@ -1,8 +1,6 @@
 package javasrc.Forms;
 
-import com.mysql.cj.log.Log;
 import javasrc.Entities.PasswordUtil;
-import javasrc.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;

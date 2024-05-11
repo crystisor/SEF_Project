@@ -1,15 +1,12 @@
 package javasrc.Forms;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import javasrc.Entities.PasswordUtil;
 import javasrc.Entities.User;
-import javafx.util.Pair;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.security.PrivateKey;
 import java.sql.*;
 
 public class RegistrationForm extends JDialog{
