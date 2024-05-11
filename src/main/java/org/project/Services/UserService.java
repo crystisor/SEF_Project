@@ -1,5 +1,8 @@
 package org.project.Services;
 
+import org.project.Entities.Book;
+import org.project.Entities.User;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
