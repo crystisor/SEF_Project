@@ -10,6 +10,11 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class RegistrationForm extends JDialog{
+
+    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
+    private static final String dbUser = "sx3";
+    private static final String dbPassword ="Q2@@wertyuiop";
+
     private JPasswordField pfPassword;
     private JTextField tfPhone;
     private JTextField tfEmail;
