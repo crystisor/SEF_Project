@@ -4,17 +4,17 @@ public class Book
 {
     private String name;
     private String author;
-    private long isbn;
-    private int Price;
-    private int Quantity;
+    private String isbn;
+    private String Price;
+    private String Quantity;
 
-    public Book(String name, String author, long isbn, int quantity,int price)
+    public Book(String name, String author, String isbn, String price, String quantity)
     {
         this.name = name;
         this.author = author;
         this.isbn = isbn;
-        this.Price = price;
-        this.Quantity = quantity;
+        Price = price;
+        Quantity = quantity;
     }
 
     public String getName()
@@ -37,13 +37,33 @@ public class Book
         this.author = author;
     }
 
-    public long getIsbn()
+    public String getIsbn()
     {
         return isbn;
     }
 
-    public void setIsbn(long isbn)
+    public void setIsbn(String isbn)
     {
         this.isbn = isbn;
+    }
+
+    public String getPrice()
+    {
+        return Price;
+    }
+
+    public void setPrice(String price)
+    {
+        Price = price;
+    }
+
+    public String getQuantity()
+    {
+        return Quantity;
+    }
+
+    public void setQuantity(String quantity)
+    {
+        Quantity = quantity;
     }
 }

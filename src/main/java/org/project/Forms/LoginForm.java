@@ -15,6 +15,9 @@ public class LoginForm extends JDialog{
     private JButton btnLogin;
     private JButton btnRegister;
     private JButton btnCancel;
+    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
+    private static final String dbUser = "cristi";
+    private static final String dbPassword ="qwertyuiop";
 
     public LoginForm(JFrame parent){
         super(parent);
@@ -76,8 +79,7 @@ public class LoginForm extends JDialog{
         boolean canLogin = false;
 
         try {
-            Connection conn = DriverManager.getConnection
-                    ("jdbc:mysql://25.19.87.249/sef_project", "sx3", "Q2@@wertyuiop");
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
             String query = "SELECT email, password FROM Users WHERE email=?";

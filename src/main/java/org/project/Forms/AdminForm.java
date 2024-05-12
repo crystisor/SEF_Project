@@ -1,5 +1,8 @@
 package org.project.Forms;
 
+import org.project.Entities.Book;
+import org.project.Services.BookService;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,9 +14,9 @@ import java.sql.*;
 
 public class AdminForm extends JDialog
 {
-    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
-    private static final String dbUser = "sx3";
-    private static final String dbPassword ="Q2@@wertyuiop";
+    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
+    private static final String dbUser = "cristi";
+    private static final String dbPassword ="qwertyuiop";
 
     private JButton btnOrderView;
     private JButton btnSearch;
@@ -32,6 +35,7 @@ public class AdminForm extends JDialog
     private JTextField tfAddBookAuthor;
     private JTextField tfAddBookPrice;
     private JLabel imageLabel;
+    private JLabel labelAddBookIsbn;
     private JLabel labelAddBookName;
     private JLabel labelAddBookAuthor;
     private JLabel labelAddBookPrice;
@@ -39,6 +43,7 @@ public class AdminForm extends JDialog
     private JLabel labelAddBookQuantity;
     private JTextField tfAddBookQuantity;
     private JTextField tfAddBookIsbn;
+    private JButton btnAddInAddPanel;
 
     public AdminForm(JDialog parent)
     {
@@ -134,6 +139,7 @@ public class AdminForm extends JDialog
             }
         }
     }
+
     private boolean search(String bookName) // for text field
     {
         try
@@ -159,17 +165,15 @@ public class AdminForm extends JDialog
         }
         return false;
     }
+
     private ImageIcon displayImage()
     {
         try
         {
-            // Load the image from the project directory
             File imageFile = new File("res/AppImages/colt_alb.jpg");
             Image image = ImageIO.read(imageFile);
-            ImageIcon icon = new ImageIcon(image);
 
-            // Set the image to the JLabel
-            return icon;
+            return new ImageIcon(image);
         }
         catch (IOException ex)
         {
@@ -178,12 +182,13 @@ public class AdminForm extends JDialog
         }
         return null;
     }
+
     private void displayAdder()
     {
         JPanel addBookPanel = new JPanel();
-        addBookPanel.setLayout(new BoxLayout(addBookPanel,BoxLayout.Y_AXIS));
+        addBookPanel.setLayout(new BoxLayout(addBookPanel, BoxLayout.Y_AXIS));
 
-        JLabel labelAddBookIsbn = new JLabel("Book ISBN: ");
+        labelAddBookIsbn = new JLabel("Book ISBN: ");
         tfAddBookIsbn = new JTextField();
 
         labelAddBookName = new JLabel("Book Name: ");
@@ -198,6 +203,22 @@ public class AdminForm extends JDialog
         labelAddBookQuantity = new JLabel("Book Quantity: ");
         tfAddBookQuantity = new JTextField();
 
+        btnAddInAddPanel = new JButton("Add book");
+        btnAddInAddPanel.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                Book book = new Book(tfAddBookName.getText(), tfAddBookAuthor.getText(), tfAddBookIsbn.getText(), tfAddBookPrice.getText(), tfAddBookQuantity.getText());
+                if (!BookService.isBookValid(book))
+                {
+                    System.out.println("Wrong");
+                    return;
+                }
+                addBook(book);
+            }
+        });
+
         addBookPanel.add(labelAddBookIsbn);
         addBookPanel.add(tfAddBookIsbn);
         addBookPanel.add(labelAddBookName);
@@ -208,22 +229,13 @@ public class AdminForm extends JDialog
         addBookPanel.add(tfAddBookPrice);
         addBookPanel.add(labelAddBookQuantity);
         addBookPanel.add(tfAddBookQuantity);
+        addBookPanel.add(btnAddInAddPanel);
 
-        JOptionPane.showMessageDialog(this, addBookPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
-        try
-        {
-            int price = Integer.parseInt(tfAddBookPrice.getText());
-            int quantity = Integer.parseInt(tfAddBookQuantity.getText());
-            long isbn = Long.parseLong(tfAddBookIsbn.getText());
-            addBook( isbn , tfAddBookName.getText(), tfAddBookAuthor.getText(), price, quantity );
-        }
-        catch (NumberFormatException e)
-        {
-            System.err.println("Input is not a valid integer: " + tfAddBookPrice.getText());
-        }
+        JOptionPane.showMessageDialog(this, addBookPanel, "Add books", JOptionPane.PLAIN_MESSAGE);
+
     }
-    
-    private void addBook(long isbn, String bookName, String bookAuthor, int price, int quantity)
+
+    private void addBook(Book book)
     {
         try
         {
@@ -232,21 +244,20 @@ public class AdminForm extends JDialog
             Statement st = conn.createStatement();
             String query = "INSERT INTO Books (ISBN, Name, Author, Price, Quantity) VALUES (?, ?, ?, ?, ?)";
 
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setLong(1, isbn );
-            ps.setString(2, bookName);
-            ps.setString(3, bookAuthor);
-            ps.setInt(4, price);
-            ps.setInt(5, quantity);
+            PreparedStatement insertBook = conn.prepareStatement(query);
+            insertBook.setString(1, book.getIsbn());
+            insertBook.setString(2, book.getName());
+            insertBook.setString(3, book.getAuthor());
+            insertBook.setString(4, book.getPrice());
+            insertBook.setString(5, book.getQuantity());
 
-            int rowsInserted = ps.executeUpdate();
+            int rowsInserted = insertBook.executeUpdate();
             if (rowsInserted > 0)
             {
                 System.out.println("Book added");
-            }
-            else
+            } else
                 System.out.println("Failed to add book");
-            ps.close();
+            insertBook.close();
             conn.close();
         }
         catch (Exception e)
@@ -254,6 +265,7 @@ public class AdminForm extends JDialog
             e.printStackTrace();
         }
     }
+
     public static void main(String[] args)
     {
         AdminForm adminForm = new AdminForm(null);

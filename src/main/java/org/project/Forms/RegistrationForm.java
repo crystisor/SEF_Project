@@ -20,6 +20,9 @@ public class RegistrationForm extends JDialog{
     private JButton btnCancel;
     private JPanel RegisterPanel;
     private JTextField tfAddress;
+    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
+    private static final String dbUser = "cristi";
+    private static final String dbPassword ="qwertyuiop";
 
     public RegistrationForm(JDialog parent) {
         super(parent);
@@ -68,9 +71,7 @@ public class RegistrationForm extends JDialog{
 
             if (user.isValidUser() != 0)
             {
-                JOptionPane.showMessageDialog(this,
-                        "Please enter valid data " + user.isValidUser(),
-                        "Try again", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Please enter valid data " + user.isValidUser(), "Try again", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -95,8 +96,7 @@ public class RegistrationForm extends JDialog{
 
         hasRegisteredUser = false;
         try {
-            Connection conn = DriverManager.getConnection
-                    ("jdbc:mysql://25.19.87.249/sef_project", "sx3", "Q2@@wertyuiop");
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
             Statement st = conn.createStatement();
             String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
                     "VALUES (?, ?, ?, ?, ?, ?)";
