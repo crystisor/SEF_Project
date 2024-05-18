@@ -13,7 +13,7 @@ public class UserForm extends JDialog
     public UserForm(JDialog parent)
     {
         super(parent);
-        setTitle("Root");
+        setTitle("User");
         setContentPane(userPanel);
         setMinimumSize(new Dimension(500, 500));
         setModal(true);

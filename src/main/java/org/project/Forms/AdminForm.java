@@ -1,6 +1,7 @@
 package org.project.Forms;
 
 import org.project.Entities.Book;
+import org.project.Entities.Library;
 import org.project.Services.BookService;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ public class AdminForm extends JDialog
     private static final String dbUser = "cristi";
     private static final String dbPassword ="qwertyuiop";
 
+    private static Library root;
     private JButton btnOrderView;
     private JButton btnSearch;
     private JButton btnAdd;
@@ -45,7 +47,7 @@ public class AdminForm extends JDialog
     private JTextField tfAddBookIsbn;
     private JButton btnAddInAddPanel;
 
-    public AdminForm(JDialog parent)
+    public AdminForm(JDialog parent, Library root)
     {
         super(parent);
         setTitle("Root");
@@ -54,7 +56,7 @@ public class AdminForm extends JDialog
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+        AdminForm.root = root;
         countUsers();
 
         btnSearch.addActionListener(new ActionListener()
@@ -115,14 +117,16 @@ public class AdminForm extends JDialog
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new BoxLayout(searchPanel,BoxLayout.Y_AXIS));
 
-        labelSearchBook = new JLabel("Please enter the book's name: ");
+        labelSearchBook = new JLabel("Enter the book's name: ");
         tfSearch = new JTextField();
 
         searchPanel.add(labelSearchBook);
         searchPanel.add(tfSearch);
 
         tfaSearch = new JTextArea(10, 30);
+        displayBooks(tfaSearch,root);
         JScrollPane scrollPane = new JScrollPane(tfaSearch);
+
         searchPanel.add(scrollPane);
 
         JOptionPane.showMessageDialog(this, searchPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
@@ -267,8 +271,32 @@ public class AdminForm extends JDialog
         }
     }
 
+    private void displayBooks(JTextArea tfa, Library root)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "SELECT name, library_id FROM Books WHERE library_id=?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, root.getID());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                System.out.println(rs.getString("name"));
+                tfa.append(rs.getString("name") + "\n");
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args)
     {
-        AdminForm adminForm = new AdminForm(null);
+        //Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
+        //AdminForm adminForm = new AdminForm(null, lib);
     }
 }

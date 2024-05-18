@@ -1,5 +1,6 @@
 package org.project.Forms;
 
+import org.project.Entities.Library;
 import org.project.Entities.PasswordUtil;
 
 import javax.swing.*;
@@ -44,6 +45,7 @@ public class LoginForm extends JDialog{
                     checkBoxState = 0;
             }
         });
+
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -53,12 +55,12 @@ public class LoginForm extends JDialog{
                 boolean canLogin = getUser(email,password);
                 if (checkBoxState == 1)
                 {
-                    boolean isRoot = isRoot(email, password);
-                    if (isRoot)
+                    Library root =  isRoot(email, password);
+                    if (root != null)
                     {
                         System.out.println("Logged as root");
                         dispose();
-                        AdminForm adminForm = new AdminForm(LoginForm.this);
+                        AdminForm adminForm = new AdminForm(LoginForm.this, root);
                     }
                     else
                     {
@@ -72,6 +74,7 @@ public class LoginForm extends JDialog{
                 {
                     System.out.println("Logged as user");
                     dispose();
+                    UserForm userForm = new UserForm(LoginForm.this);
                 }
                 else
                 {
@@ -82,6 +85,7 @@ public class LoginForm extends JDialog{
                 }
             }
         });
+
         btnCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -99,26 +103,29 @@ public class LoginForm extends JDialog{
         setVisible(true);
     }
 
-    private boolean isRoot(String email, String password)
+    private Library isRoot(String email, String password)
     {
         try
         {
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
-            String query = "SELECT email FROM Libraries WHERE email=?";
+            String query = "SELECT * FROM Libraries WHERE email=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next() && password.equals("root"))
-                return true;
+            {
+                return new Library(rs.getString("id"), rs.getString("name"), rs.getString("address"),
+                        rs.getString("phone"), rs.getString("email"));
+            }
         }
         catch(SQLException e)
         {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     private boolean getUser(String email, String password) {
