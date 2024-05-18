@@ -15,9 +15,9 @@ import java.sql.*;
 
 public class AdminForm extends JDialog
 {
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
+    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
+    private static final String dbUser = "sx3";
+    private static final String dbPassword ="Q2@@wertyuiop";
 
     private static Library root;
     private JButton btnOrderView;
@@ -296,7 +296,7 @@ public class AdminForm extends JDialog
     }
     public static void main(String[] args)
     {
-        //Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
-        //AdminForm adminForm = new AdminForm(null, lib);
+        Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
+        AdminForm adminForm = new AdminForm(null, lib);
     }
 }

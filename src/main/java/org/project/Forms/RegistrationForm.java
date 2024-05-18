@@ -20,9 +20,9 @@ public class RegistrationForm extends JDialog{
     private JButton btnCancel;
     private JPanel RegisterPanel;
     private JTextField tfAddress;
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
+    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
+    private static final String dbUser = "sx3";
+    private static final String dbPassword ="Q2@@wertyuiop";
 
     public RegistrationForm(JDialog parent) {
         super(parent);
