@@ -47,7 +47,7 @@ public class BookService
 
     public static void main(String[] args)
     {
-        Book book = new Book("aaa", "cccc", "57656765", "22", "100");
+        Book book = new Book("aaa", "cccc", "57656765", "22", "100", "dferwkfreijk");
         System.out.println(BookService.isBookValid(book));
     }
 }

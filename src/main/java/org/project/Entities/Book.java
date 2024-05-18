@@ -5,16 +5,18 @@ public class Book
     private String name;
     private String author;
     private String isbn;
-    private String Price;
-    private String Quantity;
+    private String price;
+    private String quantity;
+    private String image_url;
 
-    public Book(String name, String author, String isbn, String price, String quantity)
+    public Book(String name, String author, String isbn, String price, String quantity, String image_url)
     {
         this.name = name;
         this.author = author;
         this.isbn = isbn;
-        Price = price;
-        Quantity = quantity;
+        this.price = price;
+        this.quantity = quantity;
+        this.image_url = image_url;
     }
 
     public String getName()
@@ -49,21 +51,33 @@ public class Book
 
     public String getPrice()
     {
-        return Price;
+        return price;
     }
 
     public void setPrice(String price)
     {
-        Price = price;
+        price = price;
     }
 
     public String getQuantity()
     {
-        return Quantity;
+        return quantity;
     }
 
     public void setQuantity(String quantity)
     {
-        Quantity = quantity;
+        quantity = quantity;
+    }
+
+    public String getImage_url()
+    {
+        return image_url;
+    }
+
+    @Override
+    public String toString()
+    {
+        String content = "Name: " + getName() + " " + "Author: " + getAuthor();
+        return content;
     }
 }
