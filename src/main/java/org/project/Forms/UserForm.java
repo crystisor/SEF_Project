@@ -164,7 +164,7 @@ public class UserForm extends JDialog {
 
             while (resultSet.next()) {
                book = new Book( resultSet.getString("Name"), resultSet.getString("Author"), resultSet.getString("ISBN"),
-                       resultSet.getString("Price"), resultSet.getString("Quantity"));
+                       resultSet.getString("Price"), resultSet.getString("Quantity"), resultSet.getString("Image_url"));
             }
 
             resultSet.close();
