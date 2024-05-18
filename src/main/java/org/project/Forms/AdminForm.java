@@ -44,6 +44,8 @@ public class AdminForm extends JDialog
     private JLabel labelAddBookPrice;
     private JLabel labelSearchBook;
     private JLabel labelAddBookQuantity;
+    private JLabel labelImageURL;
+    private JTextField tfImageURl;
     private JTextField tfAddBookQuantity;
     private JTextField tfAddBookIsbn;
     private JButton btnAddInAddPanel;
@@ -65,7 +67,8 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                displayBrowser();
+                SearchBooks searchBooks = new SearchBooks(AdminForm.this, root);
+                //displayBrowser();
             }
         });
         btnAdd.addActionListener(new ActionListener()
@@ -124,13 +127,15 @@ public class AdminForm extends JDialog
         searchPanel.add(labelSearchBook);
         searchPanel.add(tfSearch);
 
-        tfaSearch = new JTextArea(10, 30);
-        displayBooks(tfaSearch,root);
-        JScrollPane scrollPane = new JScrollPane(tfaSearch);
+        JPanel booksPanel = new JPanel();
+        booksPanel.setLayout(new BoxLayout(booksPanel, BoxLayout.Y_AXIS));
+        displayBooks(booksPanel, root);
 
+        JScrollPane scrollPane = new JScrollPane(booksPanel);
         searchPanel.add(scrollPane);
 
         JOptionPane.showMessageDialog(this, searchPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
+
         ImageIcon icon = null;
         Book book = search(tfSearch.getText());
         if (book != null)
@@ -170,6 +175,18 @@ public class AdminForm extends JDialog
                             editBook(book, editQuantity.getText(), editPrice.getText());
                     }
                 });
+
+                deleteBtn.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        int result = JOptionPane.showConfirmDialog(null,
+                                "Are you sure you want to delete this book?",
+                                "Delete Book", JOptionPane.YES_NO_OPTION);
+                        if (result == JOptionPane.YES_OPTION) {
+                            deleteBook(book);
+                        }
+                    }
+                });
                 JOptionPane.showMessageDialog(this, searchPanel, "Test Image Display", JOptionPane.PLAIN_MESSAGE);
             }
         }
@@ -200,6 +217,29 @@ public class AdminForm extends JDialog
         }
     }
 
+    private void deleteBook(Book book)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "DELETE FROM Books WHERE Name = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, book.getName());
+
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            System.out.println("Book deleted");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     private Book search(String bookName) // for text field
     {
         try
@@ -217,7 +257,7 @@ public class AdminForm extends JDialog
             {
                 System.out.println("Book found");
                 return new Book(rs.getString("name"), rs.getString("author"), rs.getString("isbn"),
-                        rs.getString("price"), rs.getString("quantity"));
+                        rs.getString("price"), rs.getString("quantity"), rs.getString("Image_url"));
             }
         }
         catch (Exception e)
@@ -264,13 +304,16 @@ public class AdminForm extends JDialog
         labelAddBookQuantity = new JLabel("Book Quantity: ");
         tfAddBookQuantity = new JTextField();
 
+        labelImageURL = new JLabel("Image URL: ");
+        tfImageURl = new JTextField();
+
         btnAddInAddPanel = new JButton("Add book");
         btnAddInAddPanel.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Book book = new Book(tfAddBookName.getText(), tfAddBookAuthor.getText(), tfAddBookIsbn.getText(), tfAddBookPrice.getText(), tfAddBookQuantity.getText());
+                Book book = new Book(tfAddBookName.getText(), tfAddBookAuthor.getText(), tfAddBookIsbn.getText(), tfAddBookPrice.getText(), tfAddBookQuantity.getText(), tfImageURl.getText());
                 if (!BookService.isBookValid(book))
                 {
                     System.out.println("Wrong");
@@ -290,6 +333,8 @@ public class AdminForm extends JDialog
         addBookPanel.add(tfAddBookPrice);
         addBookPanel.add(labelAddBookQuantity);
         addBookPanel.add(tfAddBookQuantity);
+        addBookPanel.add(labelImageURL);
+        addBookPanel.add(tfImageURl);
         addBookPanel.add(btnAddInAddPanel);
 
         JOptionPane.showMessageDialog(this, addBookPanel, "Add books", JOptionPane.PLAIN_MESSAGE);
@@ -303,7 +348,7 @@ public class AdminForm extends JDialog
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
-            String query = "INSERT INTO Books (ISBN, Name, Author, Price, Quantity) VALUES (?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Books (ISBN, Name, Author, Price, Quantity, Library_id, Image_url) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement insertBook = conn.prepareStatement(query);
             insertBook.setString(1, book.getIsbn());
@@ -311,6 +356,8 @@ public class AdminForm extends JDialog
             insertBook.setString(3, book.getAuthor());
             insertBook.setString(4, book.getPrice());
             insertBook.setString(5, book.getQuantity());
+            insertBook.setString(6, root.getID());
+            insertBook.setString(7, book.getImage_url());
 
             int rowsInserted = insertBook.executeUpdate();
             if (rowsInserted > 0)
@@ -327,14 +374,14 @@ public class AdminForm extends JDialog
         }
     }
 
-    private void displayBooks(JTextArea tfa, Library root)
+    private void displayBooks(JPanel booksPanel, Library root)
     {
         try
         {
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
-            String query = "SELECT name, library_id FROM Books WHERE library_id=?";
+            String query = "SELECT * FROM Books WHERE library_id=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, root.getID());
@@ -342,7 +389,19 @@ public class AdminForm extends JDialog
             while(rs.next())
             {
                 System.out.println(rs.getString("name"));
-                tfa.append(rs.getString("name") + "\n");
+                Book book = new Book(rs.getString("Name"), rs.getString("Author"), rs.getString("ISBN"),
+                       rs.getString("Price"), rs.getString("Quantity"), rs.getString("Image_url"));
+                JLabel bookLabel = new JLabel(book.getName());
+
+                ImageIcon bookIcon = new ImageIcon(rs.getString("Image_url"));
+                JLabel imageLabel = new JLabel(bookIcon);
+
+                JPanel bookPanel = new JPanel();
+                bookPanel.setLayout(new BorderLayout());
+                bookPanel.add(bookLabel, BorderLayout.NORTH);
+                bookPanel.add(imageLabel, BorderLayout.CENTER);
+
+                booksPanel.add(bookPanel);
             }
         }
         catch (Exception e)
@@ -350,6 +409,7 @@ public class AdminForm extends JDialog
             e.printStackTrace();
         }
     }
+
     public static void main(String[] args)
     {
         Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
