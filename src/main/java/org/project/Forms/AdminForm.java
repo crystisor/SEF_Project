@@ -129,6 +129,7 @@ public class AdminForm extends JDialog
         ImageIcon icon = null;
         if (search(tfSearch.getText()))
         {
+            System.out.println("not null tfSearch");
             icon = displayImage();
             if (icon != null)
             {

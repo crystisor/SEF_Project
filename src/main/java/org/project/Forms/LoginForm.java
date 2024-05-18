@@ -3,9 +3,12 @@ package org.project.Forms;
 import org.project.Entities.PasswordUtil;
 
 import javax.swing.*;
+import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.*;
 
 public class LoginForm extends JDialog{
@@ -15,9 +18,11 @@ public class LoginForm extends JDialog{
     private JButton btnLogin;
     private JButton btnRegister;
     private JButton btnCancel;
+    private JCheckBox libraryCheckBox;
     private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
     private static final String dbUser = "cristi";
     private static final String dbPassword ="qwertyuiop";
+    private static int checkBoxState = 0;
 
     public LoginForm(JFrame parent){
         super(parent);
@@ -28,29 +33,53 @@ public class LoginForm extends JDialog{
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        libraryCheckBox.addItemListener(new ItemListener()
+        {
+            @Override
+            public void itemStateChanged(ItemEvent e)
+            {
+                if (e.getStateChange() == ItemEvent.SELECTED)
+                    checkBoxState = 1;
+                else
+                    checkBoxState = 0;
+            }
+        });
         btnLogin.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    String email = tfEmail.getText();
-                    String password = String.valueOf(pfPassword.getPassword());
+                String email = tfEmail.getText();
+                String password = String.valueOf(pfPassword.getPassword());
 
-                    boolean canLogin = getUser(email,password);
+                boolean canLogin = getUser(email,password);
+                if (checkBoxState == 1)
+                {
                     boolean isRoot = isRoot(email, password);
-                    if(isRoot){
+                    if (isRoot)
+                    {
                         System.out.println("Logged as root");
                         dispose();
                         AdminForm adminForm = new AdminForm(LoginForm.this);
                     }
-                    else if (canLogin){
-                        System.out.println("Logged as user");
-                        dispose();
-                    }
-                    else {
+                    else
+                    {
                         JOptionPane.showMessageDialog(LoginForm.this,
                                 "Invalid email or password",
                                 "Try again",
                                 JOptionPane.ERROR_MESSAGE);
                     }
+                }
+                else if (canLogin)
+                {
+                    System.out.println("Logged as user");
+                    dispose();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(LoginForm.this,
+                            "Invalid email or password",
+                            "Try again",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
         btnCancel.addActionListener(new ActionListener() {
@@ -70,8 +99,26 @@ public class LoginForm extends JDialog{
         setVisible(true);
     }
 
-    private boolean isRoot(String email, String password){
-        return email.equals("root") && password.equals("root");
+    private boolean isRoot(String email, String password)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "SELECT email FROM Libraries WHERE email=?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && password.equals("root"))
+                return true;
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private boolean getUser(String email, String password) {
@@ -91,7 +138,7 @@ public class LoginForm extends JDialog{
             if (rs.next())
             {
                 if (PasswordUtil.checkPassword(password, rs.getString("password")))
-                canLogin = true;
+                    canLogin = true;
             }
 
             st.close();
