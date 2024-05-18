@@ -14,10 +14,9 @@ import java.sql.*;
 
 public class LoginForm extends JDialog{
 
-    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
-    private static final String dbUser = "sx3";
-    private static final String dbPassword ="Q2@@wertyuiop";
-
+    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
+    private static final String dbUser = "cristi";
+    private static final String dbPassword ="qwertyuiop";
     private JPanel LoginPanel;
     private JTextField tfEmail;
     private JPasswordField pfPassword;

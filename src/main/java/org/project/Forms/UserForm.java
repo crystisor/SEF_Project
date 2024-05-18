@@ -1,7 +1,9 @@
 package org.project.Forms;
 
 import org.project.Entities.Book;
+import org.project.Entities.BookListCellRenderer;
 import org.project.Entities.User;
+import org.project.Entities.BookListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserForm extends JDialog {
-    private static final String dbURL = "jdbc:mysql://25.19.87.249/sef_project";
-    private static final String dbUser = "sx3";
-    private static final String dbPassword = "Q2@@wertyuiop";
+    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
+    private static final String dbUser = "cristi";
+    private static final String dbPassword ="qwertyuiop";
 
     private JPanel userPanel;
     private JPanel bookPanel;
@@ -23,7 +25,7 @@ public class UserForm extends JDialog {
     private JButton addBooktoOrder;
     private JButton addFunds;
     private JList<String> libList;
-    private JList<String> bookList;
+    private JList<Book> bookList;
 
     private List<Book> order = new ArrayList<>();
 
@@ -35,6 +37,8 @@ public class UserForm extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        bookList.setCellRenderer(new BookListCellRenderer());
+
         // Initialize components
         userPanel = new JPanel();
         userPanel.setLayout(new BorderLayout());
@@ -45,7 +49,6 @@ public class UserForm extends JDialog {
         JScrollPane libScrollPane = new JScrollPane(libList);
         libScrollPane.setPreferredSize(new Dimension(150, 300));
 
-        bookList = new JList<>();
         JScrollPane bookScrollPane = new JScrollPane(bookList);
 
         // Add components to the panel
@@ -68,16 +71,16 @@ public class UserForm extends JDialog {
             if (!e.getValueIsAdjusting()) {
                 String selectedLibrary = libList.getSelectedValue();
                 if (selectedLibrary != null) {
-                    List<String> books = getBooksForLibrary(selectedLibrary);
+                    List<Book> books = getBooksForLibrary(selectedLibrary);
                     updateBookList(books);
                 }
             }
         });
 
         addBooktoOrder.addActionListener(e -> {
-            String selectedBookName = bookList.getSelectedValue();
+            Book selectedBookName = bookList.getSelectedValue();
             if (selectedBookName != null) {
-                Book book = retrieveBook(selectedBookName);
+                Book book = retrieveBook(selectedBookName.getName());
                 if (book != null) {
                      order.add(book);
                     JOptionPane.showMessageDialog(UserForm.this, "Book '" + selectedBookName + "' added to order.");
@@ -167,6 +170,7 @@ public class UserForm extends JDialog {
                        resultSet.getString("Price"), resultSet.getString("Quantity"), resultSet.getString("Image_url"));
             }
 
+
             resultSet.close();
             statement.close();
             connection.close();
@@ -199,21 +203,25 @@ public class UserForm extends JDialog {
         return libraryNames;
     }
 
-    public static List<String> getBooksForLibrary(String libraryName) {
-        List<String> books = new ArrayList<>();
-
+    public List<Book> getBooksForLibrary(String libraryName) {
+        List<Book> books = new ArrayList<>();
+        DefaultListModel<Book> bookListModel = new DefaultListModel<>();
         try {
             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT Books.Name FROM Books " +
+            ResultSet rs = statement.executeQuery("SELECT * FROM Books " +
                     "INNER JOIN Libraries ON Books.library_id = Libraries.id " +
                     "WHERE Libraries.name = '" + libraryName + "'");
 
-            while (resultSet.next()) {
-                books.add(resultSet.getString("Name"));
+            while (rs.next()) {
+                Book book = new Book(rs.getString("Name"), rs.getString("Author"), rs.getString("ISBN"),
+                        rs.getString("Price"), rs.getString("Quantity"), rs.getString("Image_url"));
+                books.add(book);
+                bookListModel.addElement(book);
             }
 
-            resultSet.close();
+            bookList.setModel(bookListModel);
+            rs.close();
             statement.close();
             connection.close();
         } catch (Exception e) {
@@ -223,10 +231,11 @@ public class UserForm extends JDialog {
         return books;
     }
 
-    public void updateBookList(List<String> books) {
+    public void updateBookList(List<Book> books) {
 
-        DefaultListModel<String> bookListModel = new DefaultListModel<>();
-        for (String book : books) {
+        DefaultListModel<Book> bookListModel = new DefaultListModel<>();
+        for (Book book : books) {
+            System.out.println("Book: " + book.getImage_url());
             bookListModel.addElement(book);
         }
         bookList.setModel(bookListModel);
