@@ -2,9 +2,9 @@ package org.project.Forms;
 
 import org.project.Entities.Library;
 import org.project.Entities.PasswordUtil;
+import org.project.Entities.User;
 
 import javax.swing.*;
-import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -54,7 +54,8 @@ public class LoginForm extends JDialog{
                 String email = tfEmail.getText();
                 String password = String.valueOf(pfPassword.getPassword());
 
-                boolean canLogin = getUser(email,password);
+                User user = getUser(email,password);
+
                 if (checkBoxState == 1)
                 {
                     Library root =  isRoot(email, password);
@@ -72,11 +73,11 @@ public class LoginForm extends JDialog{
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 }
-                else if (canLogin)
+                else if ( user != null )
                 {
                     System.out.println("Logged as user");
                     dispose();
-                    UserForm userForm = new UserForm(LoginForm.this);
+                    UserForm userForm = new UserForm(LoginForm.this,user);
                 }
                 else
                 {
@@ -130,15 +131,15 @@ public class LoginForm extends JDialog{
         return null;
     }
 
-    private boolean getUser(String email, String password) {
+    private User getUser(String email, String password) {
 
-        boolean canLogin = false;
+        User user = null;
 
         try {
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
             Statement st = conn.createStatement();
-            String query = "SELECT email, password FROM Users WHERE email=?";
+            String query = "SELECT * FROM Users WHERE email=?";
 
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, email);
@@ -146,8 +147,11 @@ public class LoginForm extends JDialog{
 
             if (rs.next())
             {
-                if (PasswordUtil.checkPassword(password, rs.getString("password")))
-                    canLogin = true;
+                if (PasswordUtil.checkPassword(password, rs.getString("password"))) {
+                   user = new User(rs.getString("first_name"), rs.getString("last_name"),
+                           rs.getString("email"), rs.getString("address"),rs.getString("phone_number"),
+                            rs.getString("password"));
+                }
             }
 
             st.close();
@@ -157,7 +161,7 @@ public class LoginForm extends JDialog{
             e.printStackTrace();
         }
 
-        return canLogin;
+        return user;
     }
 
     public static void main(String[] args) {
