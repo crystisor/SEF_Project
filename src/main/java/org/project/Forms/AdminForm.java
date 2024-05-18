@@ -6,6 +6,7 @@ import org.project.Services.BookService;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.nimbus.State;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -131,21 +132,75 @@ public class AdminForm extends JDialog
 
         JOptionPane.showMessageDialog(this, searchPanel, "Search Books", JOptionPane.PLAIN_MESSAGE);
         ImageIcon icon = null;
-        if (search(tfSearch.getText()))
+        Book book = search(tfSearch.getText());
+        if (book != null)
         {
-            System.out.println("not null tfSearch");
             icon = displayImage();
             if (icon != null)
             {
                 imageLabel = new JLabel();
                 imageLabel.setIcon(icon);
                 searchPanel.add(imageLabel);
-                JOptionPane.showMessageDialog(this, imageLabel, "Test Image Display", JOptionPane.PLAIN_MESSAGE);
+
+                JButton editBtn = new JButton("Edit Book");
+                JButton deleteBtn = new JButton("Delete Book");
+                searchPanel.add(editBtn);
+                searchPanel.add(deleteBtn);
+
+                editBtn.addActionListener(new ActionListener()
+                {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        JPanel editPanel = new JPanel();
+                        editPanel.setLayout(new BoxLayout(editPanel,BoxLayout.Y_AXIS));
+
+                        JLabel quantityLabel = new JLabel("Edit Quantity:");
+                        JLabel priceLabel = new JLabel("Edit Price:");
+                        JTextField editQuantity = new JTextField();
+                        JTextField editPrice = new JTextField();
+                        editPanel.add(quantityLabel);
+                        editPanel.add(editQuantity);
+                        editPanel.add(priceLabel);
+                        editPanel.add(editPrice);
+
+                        int result = JOptionPane.showConfirmDialog(null, editPanel,
+                                "Edit Book Details", JOptionPane.OK_CANCEL_OPTION);
+                        if (result == JOptionPane.OK_OPTION)
+                            editBook(book, editQuantity.getText(), editPrice.getText());
+                    }
+                });
+                JOptionPane.showMessageDialog(this, searchPanel, "Test Image Display", JOptionPane.PLAIN_MESSAGE);
             }
         }
     }
 
-    private boolean search(String bookName) // for text field
+    private void editBook(Book book, String quantity, String price)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "UPDATE Books SET Price = ?, Quantity = ? WHERE Name = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, price);
+            ps.setString(2, quantity);
+            ps.setString(3, book.getName());
+
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            System.out.println("Book Edited");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private Book search(String bookName) // for text field
     {
         try
         {
@@ -161,21 +216,22 @@ public class AdminForm extends JDialog
             if (rs.next())
             {
                 System.out.println("Book found");
-                return true;
+                return new Book(rs.getString("name"), rs.getString("author"), rs.getString("isbn"),
+                        rs.getString("price"), rs.getString("quantity"));
             }
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     private ImageIcon displayImage()
     {
         try
         {
-            File imageFile = new File("res/AppImages/colt_alb.jpg");
+            File imageFile = new File("src/main/resources/res/AppImages/colt_alb.jpg");
             Image image = ImageIO.read(imageFile);
 
             return new ImageIcon(image);
