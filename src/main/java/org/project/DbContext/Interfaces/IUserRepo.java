@@ -8,4 +8,5 @@ public interface IUserRepo {
     boolean addNewUser(User user, String encryptedPassword);
     User getUser(String email,String password);
     Library isLibrary(String email,String password);
+    public String countUsers();
 }

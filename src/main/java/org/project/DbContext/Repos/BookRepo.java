@@ -3,6 +3,7 @@ package org.project.DbContext.Repos;
 import org.project.DbContext.DbConfig;
 import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.Entities.Book;
+import org.project.Entities.Library;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -111,5 +112,39 @@ public class BookRepo extends DbConfig implements IBookRepo {
             e.printStackTrace();
         }
     }
+
+    public void addBook(Book book, Library root)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "INSERT INTO Books (ISBN, Name, Author, Price, Quantity, Library_id, Image_url) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement insertBook = conn.prepareStatement(query);
+            insertBook.setString(1, book.getIsbn());
+            insertBook.setString(2, book.getName());
+            insertBook.setString(3, book.getAuthor());
+            insertBook.setString(4, book.getPrice());
+            insertBook.setString(5, book.getQuantity());
+            insertBook.setString(6, root.getID());
+            insertBook.setString(7, book.getImage_url());
+
+            int rowsInserted = insertBook.executeUpdate();
+            if (rowsInserted > 0)
+            {
+                System.out.println("Book added");
+            } else
+                System.out.println("Failed to add book");
+            insertBook.close();
+            conn.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
 }

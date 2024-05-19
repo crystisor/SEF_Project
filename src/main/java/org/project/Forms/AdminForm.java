@@ -1,5 +1,7 @@
 package org.project.Forms;
 
+import org.project.DbContext.Interfaces.IBookRepo;
+import org.project.DbContext.Interfaces.IUserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.Library;
 import org.project.Services.BookService;
@@ -16,9 +18,6 @@ import java.sql.*;
 
 public class AdminForm extends JDialog
 {
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
 
     private static Library root;
     private JButton btnOrderView;
@@ -49,6 +48,8 @@ public class AdminForm extends JDialog
     private JTextField tfAddBookQuantity;
     private JTextField tfAddBookIsbn;
     private JButton btnAddInAddPanel;
+    IUserRepo userRepo;
+    IBookRepo bookRepo;
 
     public AdminForm(JDialog parent, Library root)
     {
@@ -60,7 +61,7 @@ public class AdminForm extends JDialog
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         AdminForm.root = root;
-        countUsers();
+        userCountLabel.setText(userRepo.countUsers());
 
         btnSearch.addActionListener(new ActionListener()
         {
@@ -90,31 +91,8 @@ public class AdminForm extends JDialog
         setVisible(true);
     }
 
-    private void countUsers(){
-        try {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-            Statement st = conn.createStatement();
-            String query = "SELECT COUNT(*) AS userCount FROM Users";
-
-            ResultSet rs = st.executeQuery(query);
-            if (rs.next()) {
-                int userCount = rs.getInt("userCount");
-                System.out.println("Number of users: " + userCount);
-
-                userCountLabel.setText("Active users: " + userCount);
-            } else {
-                System.out.println("No users found");
-            }
-
-            rs.close();
-            st.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-    }
+    /*
 
     private void displayBrowser()
     {
@@ -191,7 +169,9 @@ public class AdminForm extends JDialog
             }
         }
     }
+    */
 
+    /*
     private void editBook(Book book, String quantity, String price)
     {
         try
@@ -239,7 +219,9 @@ public class AdminForm extends JDialog
             e.printStackTrace();
         }
     }
+    */
 
+    /*
     private Book search(String bookName) // for text field
     {
         try
@@ -267,6 +249,8 @@ public class AdminForm extends JDialog
         return null;
     }
 
+     */
+    /*
     private ImageIcon displayImage()
     {
         try
@@ -283,6 +267,7 @@ public class AdminForm extends JDialog
         }
         return null;
     }
+    */
 
     private void displayAdder()
     {
@@ -319,7 +304,7 @@ public class AdminForm extends JDialog
                     System.out.println("Wrong");
                     return;
                 }
-                addBook(book);
+                bookRepo.addBook(book,root);
             }
         });
 
@@ -341,6 +326,7 @@ public class AdminForm extends JDialog
 
     }
 
+    /*
     private void addBook(Book book)
     {
         try
@@ -373,7 +359,9 @@ public class AdminForm extends JDialog
             e.printStackTrace();
         }
     }
+*/
 
+    /*
     private void displayBooks(JPanel booksPanel, Library root)
     {
         try
@@ -409,6 +397,7 @@ public class AdminForm extends JDialog
             e.printStackTrace();
         }
     }
+*/
 
     public static void main(String[] args)
     {

@@ -102,4 +102,30 @@ public class UserRepo extends DbConfig implements IUserRepo {
         }
         return null;
     }
+
+    public String countUsers(){
+
+        int userCount = -1;
+        try {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "SELECT COUNT(*) AS userCount FROM Users";
+
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next()) {
+                userCount = rs.getInt("userCount");
+                System.out.println("Number of users: " + userCount);
+            } else {
+                System.out.println("No users found");
+            }
+
+            rs.close();
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return ("Active users: " + userCount);
+    }
 }
