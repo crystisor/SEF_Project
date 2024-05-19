@@ -105,6 +105,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 order.setOrderID(rs.getString("ID_order"));
                 order.setDate(rs.getString("Date"));
                 order.setUserID(rs.getString("User_id"));
+                order.setLibraryID(rs.getString("Library_id"));
 
                 String orderID = rs.getString("ID_order");
                 String queryGetOrderDetails = "SELECT BookID FROM OrderDetails WHERE OrderID=" + orderID;

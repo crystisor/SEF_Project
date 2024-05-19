@@ -11,6 +11,7 @@ public class Order {
     private String date;
     private List<Book> books;
     private String userID;
+    private String LibraryID;
 
     public String getOrderID()
     {
@@ -50,5 +51,15 @@ public class Order {
     public void setUserID(String userID)
     {
         this.userID = userID;
+    }
+
+    public String getLibraryID()
+    {
+        return LibraryID;
+    }
+
+    public void setLibraryID(String libraryID)
+    {
+        LibraryID = libraryID;
     }
 }

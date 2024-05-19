@@ -8,6 +8,7 @@ import org.project.DbContext.Repos.OrderRepo;
 import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.Library;
+import org.project.Entities.Order;
 import org.project.Services.BookService;
 
 
@@ -15,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AdminForm extends JDialog
 {
@@ -51,6 +53,7 @@ public class AdminForm extends JDialog
     IUserRepo _userRepo;
     IBookRepo _bookRepo;
     IOrderRepo _orderRepo;
+
     public AdminForm(JDialog parent, Library root, IUserRepo userRepo, IBookRepo bookRepo, IOrderRepo orderRepo)
     {
         super(parent);
@@ -71,7 +74,7 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                SearchBooks searchBooks = new SearchBooks(AdminForm.this, root, new BookRepo());
+                SearchBooks searchBooks = new SearchBooks(AdminForm.this, AdminForm.root, new BookRepo());
                 //displayBrowser();
             }
         });
@@ -88,7 +91,7 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders());
+                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders(), AdminForm.root);
             }
         });
         this._userRepo = new UserRepo();
@@ -154,7 +157,7 @@ public class AdminForm extends JDialog
 
     public static void main(String[] args)
     {
-        Library lib = new Library("1","Carturesti","aaaaa","aaaa","aaaa");
+        Library lib = new Library("2","Corina","aaaaa","aaaa","aaaa");
         AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo(), new OrderRepo());
     }
 }
