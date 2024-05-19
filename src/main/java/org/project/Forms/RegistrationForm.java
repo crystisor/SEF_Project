@@ -1,13 +1,13 @@
 package org.project.Forms;
 
-import org.project.Entities.PasswordUtil;
+import org.project.DbContext.Interfaces.IUserRepo;
+import org.project.Services.PasswordUtil;
 import org.project.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.*;
 
 public class RegistrationForm extends JDialog{
 
@@ -24,6 +24,7 @@ public class RegistrationForm extends JDialog{
     private JButton btnCancel;
     private JPanel RegisterPanel;
     private JTextField tfAddress;
+    private IUserRepo userRepo;
 
     public RegistrationForm(JDialog parent) {
         super(parent);
@@ -53,6 +54,7 @@ public class RegistrationForm extends JDialog{
         setVisible(true);
     }
 
+    boolean registered;
     private void registerUser()
     {
         String firstName = tfFirstName.getText();
@@ -84,13 +86,15 @@ public class RegistrationForm extends JDialog{
                 return;
             }
 
-            boolean registered = addUserToDatabase(user, encryptedPassword);
+           registered = userRepo.addNewUser(user,encryptedPassword);
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
     }
+
+    /*
 
     boolean hasRegisteredUser;
     private boolean addUserToDatabase(User user, String encryptedPassword) {
@@ -123,11 +127,11 @@ public class RegistrationForm extends JDialog{
         }
         return hasRegisteredUser;
     }
-    public static void main(String[] args) {
-        RegistrationForm frm = new RegistrationForm(null);
-        boolean registered = frm.hasRegisteredUser;
+    */
 
-        if( registered ) {
+    public static void main(String[] args) {
+        RegistrationForm frm = new RegistrationForm(null);;
+        if( frm.registered ) {
             System.out.println("Successfully registered");
         }
         else {

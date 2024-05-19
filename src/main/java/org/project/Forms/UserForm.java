@@ -1,9 +1,11 @@
 package org.project.Forms;
 
+import org.project.DbContext.Interfaces.IBookRepo;
+import org.project.DbContext.Interfaces.ILibraryRepo;
+import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.Entities.Book;
-import org.project.Entities.BookListCellRenderer;
+import org.project.Services.BookListCellRenderer;
 import org.project.Entities.User;
-import org.project.Entities.BookListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserForm extends JDialog {
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
 
     private JPanel userPanel;
     private JPanel bookPanel;
@@ -26,6 +25,9 @@ public class UserForm extends JDialog {
     private JButton addFunds;
     private JList<String> libList;
     private JList<Book> bookList;
+    IBookRepo bookRepo;
+    ILibraryRepo libraryRepo;
+    IOrderRepo orderRepo;
 
     private List<Book> order = new ArrayList<>();
 
@@ -43,7 +45,7 @@ public class UserForm extends JDialog {
         userPanel = new JPanel();
         userPanel.setLayout(new BorderLayout());
 
-        List<String> libNames = getLibraryNames();
+        List<String> libNames = libraryRepo.getLibraryNames();
         libList = new JList<>(libNames.toArray(new String[0]));
 
         JScrollPane libScrollPane = new JScrollPane(libList);
@@ -71,19 +73,20 @@ public class UserForm extends JDialog {
             if (!e.getValueIsAdjusting()) {
                 String selectedLibrary = libList.getSelectedValue();
                 if (selectedLibrary != null) {
-                    List<Book> books = getBooksForLibrary(selectedLibrary);
+                    List<Book> books = bookRepo.getBooksByLibraryName(selectedLibrary);
                     updateBookList(books);
                 }
             }
         });
 
         addBooktoOrder.addActionListener(e -> {
-            Book selectedBookName = bookList.getSelectedValue();
-            if (selectedBookName != null) {
-                Book book = retrieveBook(selectedBookName.getName());
+            Book selectedBook = bookList.getSelectedValue();
+            if (selectedBook != null) {
+
+                Book book = bookRepo.getBookByName(selectedBook.getName());
                 if (book != null) {
                      order.add(book);
-                    JOptionPane.showMessageDialog(UserForm.this, "Book '" + selectedBookName + "' added to order.");
+                    JOptionPane.showMessageDialog(UserForm.this, "Book '" + selectedBook + "' added to order.");
                 } else {
                     JOptionPane.showMessageDialog(UserForm.this, "Failed to retrieve book information.");
                 }
@@ -94,10 +97,10 @@ public class UserForm extends JDialog {
 
         orderDetails.addActionListener(e -> {
             if (!order.isEmpty()) {
-                int orderId = createNewOrder(user.getEmail());
+                int orderId = orderRepo.createOrder(user.getEmail());
                 if (orderId != -1) {
                     for (Book book : order) {
-                        addToOrder(orderId, book);
+                        orderRepo.addBookToOrder(orderId, book);
                     }
                     JOptionPane.showMessageDialog(UserForm.this, "Order placed successfully.");
                     order.clear(); // Clear selected books after placing order
@@ -112,6 +115,7 @@ public class UserForm extends JDialog {
         setVisible(true);
     }
 
+    /*
     private int createNewOrder(String userEmail) {
         int orderId = -1;
         try {
@@ -136,7 +140,9 @@ public class UserForm extends JDialog {
         }
         return orderId;
     }
+     */
 
+    /*
     private boolean addToOrder(int orderId, Book book) {
         try {
             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
@@ -156,7 +162,9 @@ public class UserForm extends JDialog {
             return false;
         }
     }
+    */
 
+    /*
     private Book retrieveBook(String selectedBook) {
 
         Book book = null;
@@ -180,7 +188,9 @@ public class UserForm extends JDialog {
 
         return book;
     }
+    */
 
+    /*
     public static List<String> getLibraryNames() {
         List<String> libraryNames = new ArrayList<>();
 
@@ -202,7 +212,9 @@ public class UserForm extends JDialog {
 
         return libraryNames;
     }
+     */
 
+    /*
     public List<Book> getBooksForLibrary(String libraryName) {
         List<Book> books = new ArrayList<>();
         DefaultListModel<Book> bookListModel = new DefaultListModel<>();
@@ -230,6 +242,7 @@ public class UserForm extends JDialog {
 
         return books;
     }
+    */
 
     public void updateBookList(List<Book> books) {
 

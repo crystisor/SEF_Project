@@ -1,7 +1,7 @@
 package org.project.Forms;
 
+import org.project.DbContext.Interfaces.IUserRepo;
 import org.project.Entities.Library;
-import org.project.Entities.PasswordUtil;
 import org.project.Entities.User;
 
 import javax.swing.*;
@@ -10,13 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.*;
 
 public class LoginForm extends JDialog{
 
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
     private JPanel LoginPanel;
     private JTextField tfEmail;
     private JPasswordField pfPassword;
@@ -25,6 +21,7 @@ public class LoginForm extends JDialog{
     private JButton btnCancel;
     private JCheckBox libraryCheckBox;
     private static int checkBoxState = 0;
+    IUserRepo userRepo;
 
     public LoginForm(JFrame parent){
         super(parent);
@@ -53,11 +50,11 @@ public class LoginForm extends JDialog{
                 String email = tfEmail.getText();
                 String password = String.valueOf(pfPassword.getPassword());
 
-                User user = getUser(email,password);
+                User user = userRepo.getUser(email,password);
 
                 if (checkBoxState == 1)
                 {
-                    Library root =  isRoot(email, password);
+                    Library root =  userRepo.isLibrary(email, password);
                     if (root != null)
                     {
                         System.out.println("Logged as root");
@@ -105,6 +102,7 @@ public class LoginForm extends JDialog{
         setVisible(true);
     }
 
+    /*
     private Library isRoot(String email, String password)
     {
         try
@@ -130,6 +128,9 @@ public class LoginForm extends JDialog{
         return null;
     }
 
+     */
+
+    /*
     private User getUser(String email, String password) {
 
         User user = null;
@@ -162,6 +163,8 @@ public class LoginForm extends JDialog{
 
         return user;
     }
+
+     */
 
     public static void main(String[] args) {
 

@@ -1,17 +1,6 @@
-package org.project.Entities;
+package org.project.Services;
 
 import org.mindrot.jbcrypt.BCrypt;
-
-import javafx.util.Pair;
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import java.security.*;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashMap;
 
 public class PasswordUtil
 {

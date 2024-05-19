@@ -1,7 +1,7 @@
 package org.project.Forms;
 
 import org.project.Entities.Book;
-import org.project.Entities.BookListCellRenderer;
+import org.project.Services.BookListCellRenderer;
 import org.project.Entities.Library;
 
 import javax.swing.*;
