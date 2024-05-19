@@ -4,59 +4,60 @@ import org.project.DbContext.DbConfig;
 import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.Entities.Book;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.List;
 
 public class OrderRepo extends DbConfig implements IOrderRepo {
 
-    public int createOrder(String userEmail) {
+
+    public int createOrder(int userId,List<Book> books) {
 
         int orderId = -1;
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
+        String insertOrderSQL = "INSERT INTO `Orders` (User_id, Date) VALUES (?, ?)";
 
-            // Execute an SQL INSERT query to create a new order record for the user
-            String query = "INSERT INTO Order (user_email) VALUES ('" + userEmail + "')";
-            int rowsAffected = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+        try (
+
+                Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+                PreparedStatement orderStatement = connection.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
+
+            orderStatement.setInt(1, userId);
+            orderStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            int rowsAffected = orderStatement.executeUpdate();
 
             if (rowsAffected > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
+                ResultSet generatedKeys = orderStatement.getGeneratedKeys();
                 if (generatedKeys.next()) {
                     orderId = generatedKeys.getInt(1);
                 }
             }
-
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+
+         if ( !addBooksToOrder(orderId,books) )
+             return -1;
+
         return orderId;
     }
 
-    public boolean addBookToOrder(int orderId, Book book) {
+    private boolean addBooksToOrder(int orderId, List<Book> books) {
+        String insertOrderDetailsSQL = "INSERT INTO OrderDetails (OrderID, BookID) VALUES (?, ?)";
+        boolean success = false;
 
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
+        try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+             PreparedStatement orderDetailsStatement = connection.prepareStatement(insertOrderDetailsSQL)) {
 
-            // Execute an SQL INSERT query to add the book to the order in the database
-            String query = "INSERT INTO OrderDetails (OrderDetail_ID, book_id) VALUES (" +
-                    orderId + ", " + book.getIsbn() + ")";
-            int rowsAffected = statement.executeUpdate(query);
-
-            statement.close();
-            connection.close();
-
-            return rowsAffected > 0;
-
-        } catch (Exception e) {
+            for (Book book : books) {
+                orderDetailsStatement.setInt(1, orderId);
+                orderDetailsStatement.setString(2, book.getIsbn());
+                orderDetailsStatement.executeUpdate();
+            }
+            success = true;
+        } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return success;
     }
 
 }
+

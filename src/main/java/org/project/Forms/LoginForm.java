@@ -79,7 +79,7 @@ public class LoginForm extends JDialog{
                 {
                     System.out.println("Logged as user");
                     dispose();
-                    UserForm userForm = new UserForm(LoginForm.this,user, new BookRepo(), new LibraryRepo(), new OrderRepo() );
+                    UserForm userForm = new UserForm(LoginForm.this,user, new BookRepo(), new LibraryRepo() );
                 }
                 else
                 {

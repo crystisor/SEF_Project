@@ -2,8 +2,9 @@ package org.project.DbContext.Interfaces;
 
 import org.project.Entities.Book;
 
+import java.util.List;
+
 public interface IOrderRepo {
 
-    boolean addBookToOrder(int orderId,Book book);
-    int createOrder(String email);
+    int createOrder(int userId, List<Book> books);
 }

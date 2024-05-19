@@ -2,12 +2,18 @@ package org.project.Entities;
 import org.project.Services.UserService;
 
 public class User {
+
+    int userId;
     String firstName;
     String lastName;
     String email;
     String address;
     String phone;
     String password;
+
+    public int getUserId() {
+        return userId;
+    }
 
     public User(String firstName, String lastName, String email, String address, String phone, String password) {
         this.firstName = firstName;
@@ -58,5 +64,9 @@ public class User {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

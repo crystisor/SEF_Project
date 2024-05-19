@@ -65,6 +65,7 @@ public class UserRepo extends DbConfig implements IUserRepo {
                     user = new User(rs.getString("first_name"), rs.getString("last_name"),
                             rs.getString("email"), rs.getString("address"),rs.getString("phone_number"),
                             rs.getString("password"));
+                    user.setUserId(rs.getInt("id"));
                 }
             }
 

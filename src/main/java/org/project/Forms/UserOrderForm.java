@@ -1,5 +1,8 @@
 package org.project.Forms;
 
+import org.project.DbContext.Interfaces.IBookRepo;
+import org.project.DbContext.Interfaces.IOrderRepo;
+import org.project.DbContext.Repos.OrderRepo;
 import org.project.Entities.Book;
 import org.project.Entities.User;
 import org.project.Services.BookListCellRenderer;
@@ -8,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserOrderForm extends JDialog {
@@ -18,8 +23,9 @@ public class UserOrderForm extends JDialog {
     private JButton btnConfirm;
     private JButton btnRemove;
     private DefaultListModel<Book> bookListModel;
+    private IOrderRepo _orderRepo;
 
-    public UserOrderForm(JDialog parent, User user, List<Book> selectedBooks) {
+    public UserOrderForm(JDialog parent, User user, List<Book> selectedBooks, IOrderRepo orderRepo) {
         super(parent);
         setTitle("Order");
         setMinimumSize(new Dimension(800, 500));
@@ -27,6 +33,7 @@ public class UserOrderForm extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        _orderRepo = orderRepo;
 
         orderList.setCellRenderer(new BookListCellRenderer());
         orderPanel.setLayout(new BorderLayout());
@@ -56,9 +63,10 @@ public class UserOrderForm extends JDialog {
         btnConfirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Implement the action for confirming the order here
-                // For example, save the order details to the database
+
+                _orderRepo.createOrder(user.getUserId(),selectedBooks);
                 JOptionPane.showMessageDialog(UserOrderForm.this, "Order confirmed!");
+                selectedBooks.clear();
                 dispose();
             }
         });
@@ -68,7 +76,10 @@ public class UserOrderForm extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = orderList.getSelectedIndex();
                 if (selectedIndex != -1) {
-                    bookListModel.remove(selectedIndex);
+                    Book removedBook = bookListModel.remove(selectedIndex);
+                    selectedBooks.remove(removedBook); // Remove from selectedBooks list
+                    updateOrderList(selectedBooks);
+
                     if (bookListModel.isEmpty()) {
                         JOptionPane.showMessageDialog(UserOrderForm.this, "No more items in the order. Closing the form.");
                         dispose();
@@ -84,8 +95,10 @@ public class UserOrderForm extends JDialog {
 
     public void updateOrderList(List<Book> books) {
         bookListModel = new DefaultListModel<>();
+        System.out.println("ORDER BOOKS: ");
         for (Book book : books) {
             bookListModel.addElement(book);
+            System.out.println(book.toString());
         }
         orderList.setModel(bookListModel);
     }
@@ -98,6 +111,6 @@ public class UserOrderForm extends JDialog {
                 new Book("C", "C", "C", "C", "C", "C")
         );
 
-        new UserOrderForm(null, null, books);
+        new UserOrderForm(null, null, books, new OrderRepo());
     }
 }

@@ -27,11 +27,11 @@ public class UserForm extends JDialog {
     private JLabel Icon;
     IBookRepo _bookRepo;
     ILibraryRepo _libraryRepo;
-    IOrderRepo _orderRepo;
+    //IOrderRepo _orderRepo;
 
     private List<Book> order = new ArrayList<>();
 
-    public UserForm(JDialog parent, User user, BookRepo bookRepo, LibraryRepo libraryRepo, OrderRepo orderRepo) {
+    public UserForm(JDialog parent, User user, BookRepo bookRepo, LibraryRepo libraryRepo) {
         super(parent);
         setTitle("User");
         setMinimumSize(new Dimension(800, 500));
@@ -41,7 +41,7 @@ public class UserForm extends JDialog {
 
         _bookRepo = bookRepo;
         _libraryRepo = libraryRepo;
-        _orderRepo = orderRepo;
+        //_orderRepo = orderRepo;
 
         bookList.setCellRenderer(new BookListCellRenderer());
 
@@ -78,6 +78,7 @@ public class UserForm extends JDialog {
             if (!e.getValueIsAdjusting()) {
                 String selectedLibrary = libList.getSelectedValue();
                 if (selectedLibrary != null) {
+
                     List<Book> books = _bookRepo.getBooksByLibraryName(selectedLibrary);
                     updateBookList(books);
                 }
@@ -102,7 +103,7 @@ public class UserForm extends JDialog {
 
         orderDetails.addActionListener(e -> {
             if (!order.isEmpty()) {
-                UserOrderForm userOrder = new UserOrderForm(this, user, order);
+                UserOrderForm userOrder = new UserOrderForm(this, user, order, new OrderRepo());
             } else {
                 JOptionPane.showMessageDialog(UserForm.this, "Please add at least one book to the order.");
             }
@@ -124,6 +125,7 @@ public class UserForm extends JDialog {
     public static void main(String[] args) {
 
         User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as");
-        SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo(), new OrderRepo()));
+        u.setUserId(38);
+        SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo()));
     }
 }
