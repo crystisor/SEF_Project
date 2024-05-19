@@ -38,7 +38,6 @@ public class BookRepo extends DbConfig implements IBookRepo {
 
     public List<Book> getBooksByLibraryName(String libraryName) {
 
-        System.out.println("libraryName: " + libraryName);
         List<Book> books = new ArrayList<>();
        // DefaultListModel<Book> bookListModel = new DefaultListModel<>();
         try {

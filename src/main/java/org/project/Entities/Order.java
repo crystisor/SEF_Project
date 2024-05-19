@@ -7,8 +7,48 @@ import java.util.List;
 
 public class Order {
 
-    public String userEmail;
-    public List<Book> books = new ArrayList<Book>();
-    public LocalDateTime orderDate;
-    //public String status;
+    private String orderID;
+    private String date;
+    private List<Book> books;
+    private String userID;
+
+    public String getOrderID()
+    {
+        return orderID;
+    }
+
+    public void setOrderID(String orderID)
+    {
+        this.orderID = orderID;
+    }
+
+    public String getDate()
+    {
+        return date;
+    }
+
+    public void setDate(String date)
+    {
+        this.date = date;
+    }
+
+    public List<Book> getBooks()
+    {
+        return books;
+    }
+
+    public void setBooks(List<Book> books)
+    {
+        this.books = books;
+    }
+
+    public String getUserID()
+    {
+        return userID;
+    }
+
+    public void setUserID(String userID)
+    {
+        this.userID = userID;
+    }
 }
