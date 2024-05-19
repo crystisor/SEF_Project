@@ -69,6 +69,7 @@ public class UserForm extends JDialog {
         userPanel.add(libScrollPane, BorderLayout.WEST);
         userPanel.add(bookScrollPane, BorderLayout.CENTER);
         userPanel.add(bookPanel, BorderLayout.SOUTH);
+        userPanel.add(Icon, BorderLayout.NORTH);
 
         setContentPane(userPanel);
 
@@ -101,16 +102,7 @@ public class UserForm extends JDialog {
 
         orderDetails.addActionListener(e -> {
             if (!order.isEmpty()) {
-                int orderId = _orderRepo.createOrder(user.getEmail());
-                if (orderId != -1) {
-                    for (Book book : order) {
-                        _orderRepo.addBookToOrder(orderId, book);
-                    }
-                    JOptionPane.showMessageDialog(UserForm.this, "Order placed successfully.");
-                    order.clear(); // Clear selected books after placing order
-                } else {
-                    JOptionPane.showMessageDialog(UserForm.this, "Failed to place order.");
-                }
+                UserOrderForm userOrder = new UserOrderForm(this, user, order);
             } else {
                 JOptionPane.showMessageDialog(UserForm.this, "Please add at least one book to the order.");
             }
@@ -118,7 +110,6 @@ public class UserForm extends JDialog {
 
         setVisible(true);
     }
-
 
     public void updateBookList(List<Book> books) {
 

@@ -44,7 +44,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
             Statement statement = connection.createStatement();
 
             // Execute an SQL INSERT query to add the book to the order in the database
-            String query = "INSERT INTO OrderBook (order_id, book_id) VALUES (" +
+            String query = "INSERT INTO OrderDetails (OrderDetail_ID, book_id) VALUES (" +
                     orderId + ", " + book.getIsbn() + ")";
             int rowsAffected = statement.executeUpdate(query);
 
