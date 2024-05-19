@@ -3,16 +3,15 @@ package org.project.Forms;
 import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.DbContext.Interfaces.ILibraryRepo;
 import org.project.DbContext.Interfaces.IOrderRepo;
+import org.project.DbContext.Repos.BookRepo;
+import org.project.DbContext.Repos.LibraryRepo;
+import org.project.DbContext.Repos.OrderRepo;
 import org.project.Entities.Book;
 import org.project.Services.BookListCellRenderer;
 import org.project.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +24,13 @@ public class UserForm extends JDialog {
     private JButton addFunds;
     private JList<String> libList;
     private JList<Book> bookList;
-    IBookRepo bookRepo;
-    ILibraryRepo libraryRepo;
-    IOrderRepo orderRepo;
+    IBookRepo _bookRepo;
+    ILibraryRepo _libraryRepo;
+    IOrderRepo _orderRepo;
 
     private List<Book> order = new ArrayList<>();
 
-    public UserForm(JDialog parent, User user) {
+    public UserForm(JDialog parent, User user, BookRepo bookRepo, LibraryRepo libraryRepo, OrderRepo orderRepo) {
         super(parent);
         setTitle("User");
         setMinimumSize(new Dimension(800, 500));
@@ -39,13 +38,17 @@ public class UserForm extends JDialog {
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        _bookRepo = bookRepo;
+        _libraryRepo = libraryRepo;
+        _orderRepo = orderRepo;
+
         bookList.setCellRenderer(new BookListCellRenderer());
 
         // Initialize components
         userPanel = new JPanel();
         userPanel.setLayout(new BorderLayout());
 
-        List<String> libNames = libraryRepo.getLibraryNames();
+        List<String> libNames = _libraryRepo.getLibraryNames();
         libList = new JList<>(libNames.toArray(new String[0]));
 
         JScrollPane libScrollPane = new JScrollPane(libList);
@@ -73,7 +76,7 @@ public class UserForm extends JDialog {
             if (!e.getValueIsAdjusting()) {
                 String selectedLibrary = libList.getSelectedValue();
                 if (selectedLibrary != null) {
-                    List<Book> books = bookRepo.getBooksByLibraryName(selectedLibrary);
+                    List<Book> books = _bookRepo.getBooksByLibraryName(selectedLibrary);
                     updateBookList(books);
                 }
             }
@@ -83,7 +86,7 @@ public class UserForm extends JDialog {
             Book selectedBook = bookList.getSelectedValue();
             if (selectedBook != null) {
 
-                Book book = bookRepo.getBookByName(selectedBook.getName());
+                Book book = _bookRepo.getBookByName(selectedBook.getName());
                 if (book != null) {
                      order.add(book);
                     JOptionPane.showMessageDialog(UserForm.this, "Book '" + selectedBook + "' added to order.");
@@ -97,10 +100,10 @@ public class UserForm extends JDialog {
 
         orderDetails.addActionListener(e -> {
             if (!order.isEmpty()) {
-                int orderId = orderRepo.createOrder(user.getEmail());
+                int orderId = _orderRepo.createOrder(user.getEmail());
                 if (orderId != -1) {
                     for (Book book : order) {
-                        orderRepo.addBookToOrder(orderId, book);
+                        _orderRepo.addBookToOrder(orderId, book);
                     }
                     JOptionPane.showMessageDialog(UserForm.this, "Order placed successfully.");
                     order.clear(); // Clear selected books after placing order
@@ -115,134 +118,6 @@ public class UserForm extends JDialog {
         setVisible(true);
     }
 
-    /*
-    private int createNewOrder(String userEmail) {
-        int orderId = -1;
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
-
-            // Execute an SQL INSERT query to create a new order record for the user
-            String query = "INSERT INTO Order (user_email) VALUES ('" + userEmail + "')";
-            int rowsAffected = statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
-
-            if (rowsAffected > 0) {
-                ResultSet generatedKeys = statement.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    orderId = generatedKeys.getInt(1);
-                }
-            }
-
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return orderId;
-    }
-     */
-
-    /*
-    private boolean addToOrder(int orderId, Book book) {
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
-
-            // Execute an SQL INSERT query to add the book to the order in the database
-            String query = "INSERT INTO OrderBook (order_id, book_id) VALUES (" +
-                    orderId + ", " + book.getIsbn() + ")";
-            int rowsAffected = statement.executeUpdate(query);
-
-            statement.close();
-            connection.close();
-
-            return rowsAffected > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-    */
-
-    /*
-    private Book retrieveBook(String selectedBook) {
-
-        Book book = null;
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM Books WHERE Name = '" + selectedBook + "'");
-
-            while (resultSet.next()) {
-               book = new Book( resultSet.getString("Name"), resultSet.getString("Author"), resultSet.getString("ISBN"),
-                       resultSet.getString("Price"), resultSet.getString("Quantity"), resultSet.getString("Image_url"));
-            }
-
-
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return book;
-    }
-    */
-
-    /*
-    public static List<String> getLibraryNames() {
-        List<String> libraryNames = new ArrayList<>();
-
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT name FROM Libraries");
-
-            while (resultSet.next()) {
-                libraryNames.add(resultSet.getString("name"));
-            }
-
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return libraryNames;
-    }
-     */
-
-    /*
-    public List<Book> getBooksForLibrary(String libraryName) {
-        List<Book> books = new ArrayList<>();
-        DefaultListModel<Book> bookListModel = new DefaultListModel<>();
-        try {
-            Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM Books " +
-                    "INNER JOIN Libraries ON Books.library_id = Libraries.id " +
-                    "WHERE Libraries.name = '" + libraryName + "'");
-
-            while (rs.next()) {
-                Book book = new Book(rs.getString("Name"), rs.getString("Author"), rs.getString("ISBN"),
-                        rs.getString("Price"), rs.getString("Quantity"), rs.getString("Image_url"));
-                books.add(book);
-                bookListModel.addElement(book);
-            }
-
-            bookList.setModel(bookListModel);
-            rs.close();
-            statement.close();
-            connection.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return books;
-    }
-    */
 
     public void updateBookList(List<Book> books) {
 
@@ -257,6 +132,6 @@ public class UserForm extends JDialog {
     public static void main(String[] args) {
 
         User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as");
-        SwingUtilities.invokeLater(() -> new UserForm(null,u));
+        SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo(), new OrderRepo()));
     }
 }

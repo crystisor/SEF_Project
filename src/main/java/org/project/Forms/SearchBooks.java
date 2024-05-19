@@ -21,9 +21,9 @@ public class SearchBooks extends  JDialog
     private JList<Book> bookList;
     private JButton searchButton;
     private JButton cancelButton;
-    private BookRepo bookRepo = new BookRepo();
+    private IBookRepo _bookRepo;
 
-    public SearchBooks(JDialog parent, Library root)
+    public SearchBooks(JDialog parent, Library root, IBookRepo bookRepo)
     {
         super(parent);
         SearchBooks.root = root;
@@ -34,6 +34,8 @@ public class SearchBooks extends  JDialog
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+        _bookRepo = bookRepo;
+
         bookList.setCellRenderer(new BookListCellRenderer());
 
         searchButton.addActionListener(new ActionListener()
@@ -41,10 +43,10 @@ public class SearchBooks extends  JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Book book = bookRepo.getBookByName(tfSearchBook.getText());
+                Book book = _bookRepo.getBookByName(tfSearchBook.getText());
                 if (book != null)
                 {
-                    EditBook editBook = new EditBook(SearchBooks.this, book);
+                    EditBook editBook = new EditBook(SearchBooks.this, book, new BookRepo());
                 }
                 else
                 {
@@ -61,72 +63,10 @@ public class SearchBooks extends  JDialog
             }
         });
         //displayBooks();
-        updateBookList(bookRepo.getBooksByLibraryName(root.getName()));
+        updateBookList(_bookRepo.getBooksByLibraryName(root.getName()));
         setVisible(true);
     }
 
-    /*
-    private Book search(String bookName) // for text field
-    {
-        try
-        {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-            Statement st = conn.createStatement();
-            String query = "SELECT * FROM Books WHERE Name = ? AND library_id = ?";
-
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, bookName);
-            ps.setString(2, root.getID());
-
-            ResultSet rs = ps.executeQuery();
-            if (rs.next())
-            {
-                System.out.println("Book found");
-                return new Book(rs.getString("name"), rs.getString("author"), rs.getString("isbn"),
-                        rs.getString("price"), rs.getString("quantity"), rs.getString("Image_url"));
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-
-     */
-    /*
-
-    private void displayBooks()
-    {
-        DefaultListModel<Book> listModel = new DefaultListModel<>();
-        try
-        {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-            Statement st = conn.createStatement();
-            String query = "SELECT * FROM Books WHERE library_id=?";
-
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, root.getID());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next())
-            {
-                Book book = new Book(rs.getString("Name"), rs.getString("Author"), rs.getString("ISBN"),
-                        rs.getString("Price"), rs.getString("Quantity"), rs.getString("Image_url"));
-                listModel.addElement(book);
-            }
-            bookList.setModel(listModel);
-
-            rs.close();
-            ps.close();
-            conn.close();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-     */
     public void updateBookList(List<Book> books) {
 
         DefaultListModel<Book> bookListModel = new DefaultListModel<>();
@@ -141,6 +81,6 @@ public class SearchBooks extends  JDialog
     public static void main(String[] args)
     {
         Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
-        SearchBooks searchBooks = new SearchBooks(null,lib);
+        SearchBooks searchBooks = new SearchBooks(null,lib, new BookRepo());
     }
 }

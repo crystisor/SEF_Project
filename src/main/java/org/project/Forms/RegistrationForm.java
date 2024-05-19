@@ -1,6 +1,7 @@
 package org.project.Forms;
 
 import org.project.DbContext.Interfaces.IUserRepo;
+import org.project.DbContext.Repos.UserRepo;
 import org.project.Services.PasswordUtil;
 import org.project.Entities.User;
 
@@ -11,9 +12,6 @@ import java.awt.event.ActionListener;
 
 public class RegistrationForm extends JDialog{
 
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
     private JPasswordField pfPassword;
     private JTextField tfPhone;
     private JTextField tfEmail;
@@ -24,9 +22,10 @@ public class RegistrationForm extends JDialog{
     private JButton btnCancel;
     private JPanel RegisterPanel;
     private JTextField tfAddress;
-    private IUserRepo userRepo;
+    private IUserRepo _userRepo;
 
-    public RegistrationForm(JDialog parent) {
+    public RegistrationForm(JDialog parent, IUserRepo userRepo) {
+
         super(parent);
         setTitle("Registration Form");
         setContentPane(RegisterPanel);
@@ -34,6 +33,7 @@ public class RegistrationForm extends JDialog{
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        _userRepo = userRepo;
 
         btnRegister.addActionListener(new ActionListener() {
             @Override
@@ -86,7 +86,7 @@ public class RegistrationForm extends JDialog{
                 return;
             }
 
-           registered = userRepo.addNewUser(user,encryptedPassword);
+           registered = _userRepo.addNewUser(user,encryptedPassword);
         }
         catch(Exception e)
         {
@@ -94,43 +94,8 @@ public class RegistrationForm extends JDialog{
         }
     }
 
-    /*
-
-    boolean hasRegisteredUser;
-    private boolean addUserToDatabase(User user, String encryptedPassword) {
-
-        hasRegisteredUser = false;
-        try {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement st = conn.createStatement();
-            String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement insertUserStatement = conn.prepareStatement(query);
-            insertUserStatement.setString(1,user.getFirstName());
-            insertUserStatement.setString(2,user.getLastName());
-            insertUserStatement.setString(3,user.getEmail());
-            insertUserStatement.setString(4,user.getAddress());
-            insertUserStatement.setString(5,user.getPhone());
-            insertUserStatement.setString(6,encryptedPassword);
-            int addedRowsUser = insertUserStatement.executeUpdate();
-
-            if (addedRowsUser > 0)
-            {
-                hasRegisteredUser = true;
-            }
-            st.close();
-            conn.close();
-
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return hasRegisteredUser;
-    }
-    */
-
     public static void main(String[] args) {
-        RegistrationForm frm = new RegistrationForm(null);;
+        RegistrationForm frm = new RegistrationForm(null, new UserRepo());;
         if( frm.registered ) {
             System.out.println("Successfully registered");
         }

@@ -1,6 +1,10 @@
 package org.project.Forms;
 
 import org.project.DbContext.Interfaces.IUserRepo;
+import org.project.DbContext.Repos.BookRepo;
+import org.project.DbContext.Repos.LibraryRepo;
+import org.project.DbContext.Repos.OrderRepo;
+import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Library;
 import org.project.Entities.User;
 
@@ -21,9 +25,9 @@ public class LoginForm extends JDialog{
     private JButton btnCancel;
     private JCheckBox libraryCheckBox;
     private static int checkBoxState = 0;
-    IUserRepo userRepo;
+    IUserRepo _userRepo;
 
-    public LoginForm(JFrame parent){
+    public LoginForm(JFrame parent, IUserRepo userRepo){
         super(parent);
         setTitle("Login");
         setContentPane(LoginPanel);
@@ -31,6 +35,8 @@ public class LoginForm extends JDialog{
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        _userRepo = userRepo;
 
         libraryCheckBox.addItemListener(new ItemListener()
         {
@@ -50,16 +56,16 @@ public class LoginForm extends JDialog{
                 String email = tfEmail.getText();
                 String password = String.valueOf(pfPassword.getPassword());
 
-                User user = userRepo.getUser(email,password);
+                User user = _userRepo.getUser(email,password);
 
                 if (checkBoxState == 1)
                 {
-                    Library root =  userRepo.isLibrary(email, password);
+                    Library root =  _userRepo.isLibrary(email, password);
                     if (root != null)
                     {
                         System.out.println("Logged as root");
                         dispose();
-                        AdminForm adminForm = new AdminForm(LoginForm.this, root);
+                        AdminForm adminForm = new AdminForm(LoginForm.this, root, new UserRepo(), new BookRepo());
                     }
                     else
                     {
@@ -73,7 +79,7 @@ public class LoginForm extends JDialog{
                 {
                     System.out.println("Logged as user");
                     dispose();
-                    UserForm userForm = new UserForm(LoginForm.this,user);
+                    UserForm userForm = new UserForm(LoginForm.this,user, new BookRepo(), new LibraryRepo(), new OrderRepo() );
                 }
                 else
                 {
@@ -95,79 +101,15 @@ public class LoginForm extends JDialog{
         btnRegister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegistrationForm registrationForm = new RegistrationForm(LoginForm.this);
+                RegistrationForm registrationForm = new RegistrationForm(LoginForm.this, new UserRepo());
             }
         });
 
         setVisible(true);
     }
 
-    /*
-    private Library isRoot(String email, String password)
-    {
-        try
-        {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-            Statement st = conn.createStatement();
-            String query = "SELECT * FROM Libraries WHERE email=?";
-
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next() && password.equals("root"))
-            {
-                return new Library(rs.getString("id"), rs.getString("name"), rs.getString("address"),
-                        rs.getString("phone"), rs.getString("email"));
-            }
-        }
-        catch(SQLException e)
-        {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-     */
-
-    /*
-    private User getUser(String email, String password) {
-
-        User user = null;
-
-        try {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-            Statement st = conn.createStatement();
-            String query = "SELECT * FROM Users WHERE email=?";
-
-            PreparedStatement ps = conn.prepareStatement(query);
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();;
-
-            if (rs.next())
-            {
-                if (PasswordUtil.checkPassword(password, rs.getString("password"))) {
-                   user = new User(rs.getString("first_name"), rs.getString("last_name"),
-                           rs.getString("email"), rs.getString("address"),rs.getString("phone_number"),
-                            rs.getString("password"));
-                }
-            }
-
-            st.close();
-            conn.close();
-
-        }catch ( Exception e ) {
-            e.printStackTrace();
-        }
-
-        return user;
-    }
-
-     */
-
     public static void main(String[] args) {
 
-        LoginForm loginForm = new LoginForm(null);
+        LoginForm loginForm = new LoginForm(null, new UserRepo());
     }
 }
