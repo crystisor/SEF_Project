@@ -16,6 +16,7 @@ public class EditBook extends JDialog {
     private JButton deleteButton;
     private JButton cancelButton;
     private JPanel editPanel;
+    private JLabel Icon;
     private IBookRepo _bookRepo;
 
     public EditBook(JDialog parent, Book book, IBookRepo bookRepo) {

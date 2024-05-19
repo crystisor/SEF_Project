@@ -24,6 +24,7 @@ public class UserForm extends JDialog {
     private JButton addFunds;
     private JList<String> libList;
     private JList<Book> bookList;
+    private JLabel Icon;
     IBookRepo _bookRepo;
     ILibraryRepo _libraryRepo;
     IOrderRepo _orderRepo;

@@ -21,6 +21,7 @@ public class SearchBooks extends  JDialog
     private JList<Book> bookList;
     private JButton searchButton;
     private JButton cancelButton;
+    private JLabel Icon;
     private IBookRepo _bookRepo;
 
     public SearchBooks(JDialog parent, Library root, IBookRepo bookRepo)
