@@ -1,6 +1,7 @@
 package org.project.Forms;
 
 import org.project.DbContext.Interfaces.IBookRepo;
+import org.project.DbContext.Repos.BookRepo;
 import org.project.Entities.Book;
 import org.project.Services.BookListCellRenderer;
 import org.project.Entities.Library;
@@ -20,7 +21,7 @@ public class SearchBooks extends  JDialog
     private JList<Book> bookList;
     private JButton searchButton;
     private JButton cancelButton;
-    private IBookRepo bookRepo;
+    private BookRepo bookRepo = new BookRepo();
 
     public SearchBooks(JDialog parent, Library root)
     {
@@ -130,6 +131,7 @@ public class SearchBooks extends  JDialog
 
         DefaultListModel<Book> bookListModel = new DefaultListModel<>();
         for (Book book : books) {
+            System.out.println("a");
             System.out.println("Book: " + book.getImage_url());
             bookListModel.addElement(book);
         }

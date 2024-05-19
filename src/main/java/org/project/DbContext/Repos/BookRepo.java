@@ -24,7 +24,7 @@ public class BookRepo extends DbConfig implements IBookRepo {
                 book = new Book( resultSet.getString("Name"), resultSet.getString("Author"), resultSet.getString("ISBN"),
                         resultSet.getString("Price"), resultSet.getString("Quantity"), resultSet.getString("Image_url"));
             }
-
+            System.out.println(book + "\n");
 
             resultSet.close();
             statement.close();
@@ -38,6 +38,7 @@ public class BookRepo extends DbConfig implements IBookRepo {
 
     public List<Book> getBooksByLibraryName(String libraryName) {
 
+        System.out.println("libraryName: " + libraryName);
         List<Book> books = new ArrayList<>();
        // DefaultListModel<Book> bookListModel = new DefaultListModel<>();
         try {

@@ -2,6 +2,8 @@ package org.project.Forms;
 
 import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.DbContext.Interfaces.IUserRepo;
+import org.project.DbContext.Repos.BookRepo;
+import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.Library;
 import org.project.Services.BookService;
@@ -48,8 +50,8 @@ public class AdminForm extends JDialog
     private JTextField tfAddBookQuantity;
     private JTextField tfAddBookIsbn;
     private JButton btnAddInAddPanel;
-    IUserRepo userRepo;
-    IBookRepo bookRepo;
+    UserRepo userRepo = new UserRepo();
+    BookRepo bookRepo = new BookRepo();
 
     public AdminForm(JDialog parent, Library root)
     {
@@ -88,6 +90,7 @@ public class AdminForm extends JDialog
 
             }
         });
+        this.userRepo = new UserRepo();
         setVisible(true);
     }
 
@@ -401,7 +404,7 @@ public class AdminForm extends JDialog
 
     public static void main(String[] args)
     {
-        Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
+        Library lib = new Library("1","Carturesti","aaaaa","aaaa","aaaa");
         AdminForm adminForm = new AdminForm(null, lib);
     }
 }
