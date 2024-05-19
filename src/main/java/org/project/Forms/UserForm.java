@@ -46,8 +46,7 @@ public class UserForm extends JDialog {
         bookList.setCellRenderer(new BookListCellRenderer());
 
         // Initialize components
-        userPanel = new JPanel();
-        userPanel.setLayout(new BorderLayout());
+       userPanel.setLayout(new BorderLayout());
 
         List<String> libNames = _libraryRepo.getLibraryNames();
         libList = new JList<>(libNames.toArray(new String[0]));
@@ -58,7 +57,6 @@ public class UserForm extends JDialog {
         JScrollPane bookScrollPane = new JScrollPane(bookList);
 
         // Add components to the panel
-        bookPanel = new JPanel();
         bookPanel.setLayout(new BoxLayout(bookPanel, BoxLayout.X_AXIS));
         bookPanel.add(orderDetails);
         bookPanel.add(Box.createHorizontalStrut(10)); // Add space between buttons
@@ -116,7 +114,6 @@ public class UserForm extends JDialog {
 
         DefaultListModel<Book> bookListModel = new DefaultListModel<>();
         for (Book book : books) {
-            System.out.println("Book: " + book.getImage_url());
             bookListModel.addElement(book);
         }
         bookList.setModel(bookListModel);

@@ -65,7 +65,7 @@ public class LoginForm extends JDialog{
                     {
                         System.out.println("Logged as root");
                         dispose();
-                        AdminForm adminForm = new AdminForm(LoginForm.this, root, new UserRepo(), new BookRepo());
+                        AdminForm adminForm = new AdminForm(LoginForm.this, root, new UserRepo(), new BookRepo(), new OrderRepo());
                     }
                     else
                     {

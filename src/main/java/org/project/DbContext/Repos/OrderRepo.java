@@ -3,8 +3,10 @@ package org.project.DbContext.Repos;
 import org.project.DbContext.DbConfig;
 import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.Entities.Book;
+import org.project.Entities.Order;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderRepo extends DbConfig implements IOrderRepo {
@@ -59,5 +61,87 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         return success;
     }
 
+
+
+    public String countOrders()
+    {
+        int orderCount = -1;
+        try {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "SELECT COUNT(*) AS orderCount FROM Orders";
+
+            ResultSet rs = st.executeQuery(query);
+            if (rs.next())
+            {
+                orderCount = rs.getInt("orderCount");
+                System.out.println("Number of orders: " + orderCount);
+            } else
+            {
+                System.out.println("No orders found");
+            }
+
+            rs.close();
+            st.close();
+            conn.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return "Orders: " + orderCount;
+    }
+
+    public List<Order> getOrders() {
+        List<Order> orders = new ArrayList<>();
+        try {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+            Statement st = conn.createStatement();
+            String query = "SELECT * FROM Orders";
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next())
+            {
+                Order order = new Order();
+                order.setOrderID(rs.getString("ID_order"));
+                order.setDate(rs.getString("Date"));
+                order.setUserID(rs.getString("User_id"));
+                order.setLibraryID(rs.getString("Library_id"));
+
+                String orderID = rs.getString("ID_order");
+                String queryGetOrderDetails = "SELECT BookID FROM OrderDetails WHERE OrderID=" + orderID;
+                Statement stBooks = conn.createStatement();
+                ResultSet rsBooksID = stBooks.executeQuery(queryGetOrderDetails);
+
+                List<Book> books = new ArrayList<>();
+                while (rsBooksID.next())
+                {
+                    String bookID = rsBooksID.getString("BookID");
+                    String queryGetBookDetails = "SELECT * FROM Books WHERE ISBN=" + bookID;
+                    Statement stBook = conn.createStatement();
+                    ResultSet rsBook = stBook.executeQuery(queryGetBookDetails);
+                    while (rsBook.next())
+                    {
+                        Book book = new Book(rsBook.getString("Name"), rsBook.getString("Author"), rsBook.getString("ISBN"),
+                                rsBook.getString("Price"), rsBook.getString("Quantity"), rsBook.getString("Image_url"));
+                        books.add(book);
+                    }
+                }
+                order.setBooks(books);
+
+                rsBooksID.close();
+                stBooks.close();
+
+                orders.add(order);
+            }
+            rs.close();
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
 }
 

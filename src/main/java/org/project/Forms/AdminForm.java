@@ -1,11 +1,14 @@
 package org.project.Forms;
 
 import org.project.DbContext.Interfaces.IBookRepo;
+import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.DbContext.Interfaces.IUserRepo;
 import org.project.DbContext.Repos.BookRepo;
+import org.project.DbContext.Repos.OrderRepo;
 import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.Library;
+import org.project.Entities.Order;
 import org.project.Services.BookService;
 
 
@@ -13,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AdminForm extends JDialog
 {
@@ -48,8 +52,9 @@ public class AdminForm extends JDialog
     private JButton btnAddInAddPanel;
     IUserRepo _userRepo;
     IBookRepo _bookRepo;
+    IOrderRepo _orderRepo;
 
-    public AdminForm(JDialog parent, Library root, IUserRepo userRepo, IBookRepo bookRepo)
+    public AdminForm(JDialog parent, Library root, IUserRepo userRepo, IBookRepo bookRepo, IOrderRepo orderRepo)
     {
         super(parent);
         setTitle("Root");
@@ -59,17 +64,17 @@ public class AdminForm extends JDialog
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         AdminForm.root = root;
-        userCountLabel.setText(_userRepo.countUsers());
-
         _userRepo = userRepo;
         _bookRepo = bookRepo;
-
+        _orderRepo = orderRepo;
+        userCountLabel.setText(_userRepo.countUsers());
+        orderCount.setText(_orderRepo.countOrders());
         btnSearch.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                SearchBooks searchBooks = new SearchBooks(AdminForm.this, root, new BookRepo());
+                SearchBooks searchBooks = new SearchBooks(AdminForm.this, AdminForm.root, new BookRepo());
                 //displayBrowser();
             }
         });
@@ -86,7 +91,7 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-
+                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders(), AdminForm.root);
             }
         });
         this._userRepo = new UserRepo();
@@ -152,7 +157,7 @@ public class AdminForm extends JDialog
 
     public static void main(String[] args)
     {
-        Library lib = new Library("1","Carturesti","aaaaa","aaaa","aaaa");
-        AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo());
+        Library lib = new Library("2","Corina","aaaaa","aaaa","aaaa");
+        AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo(), new OrderRepo());
     }
 }
