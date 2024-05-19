@@ -4,10 +4,7 @@ import org.project.DbContext.DbConfig;
 import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.Entities.Book;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +62,54 @@ public class BookRepo extends DbConfig implements IBookRepo {
         }
 
         return books;
+    }
+
+    public void editBook(Book book, String quantity, String price)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "UPDATE Books SET Price = ?, Quantity = ? WHERE Name = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, price);
+            ps.setString(2, quantity);
+            ps.setString(3, book.getName());
+
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            System.out.println("Book Edited");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteBook(Book book)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement st = conn.createStatement();
+            String query = "DELETE FROM Books WHERE Name = ?";
+
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, book.getName());
+
+            ps.executeUpdate();
+            ps.close();
+            conn.close();
+            System.out.println("Book deleted");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 }

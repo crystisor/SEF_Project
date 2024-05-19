@@ -1,5 +1,6 @@
 package org.project.Forms;
 
+import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.Entities.Book;
 
 import javax.swing.*;
@@ -10,15 +11,13 @@ import java.sql.*;
 
 public class EditBook extends JDialog
 {
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
 
     private static Book book;
     private JButton editButton;
     private JButton deleteButton;
     private JButton cancelButton;
     private JPanel editPanel;
+    private IBookRepo bookRepo;
 
     public EditBook(JDialog parent, Book book)
     {
@@ -50,7 +49,7 @@ public class EditBook extends JDialog
                 int result = JOptionPane.showConfirmDialog(null, editPanel,
                         "Edit Book Details", JOptionPane.OK_CANCEL_OPTION);
                 if (result == JOptionPane.OK_OPTION)
-                    //editBook(book, editQuantity.getText(), editPrice.getText());
+                    bookRepo.editBook(book, editQuantity.getText(), editPrice.getText());
                     System.out.print("a");
             }
         });
@@ -67,13 +66,13 @@ public class EditBook extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                deleteBook(book);
+                bookRepo.deleteBook(book);
                 dispose();
             }
         });
         setVisible(true);
     }
-
+/*
     private void editBook(Book book, String quantity, String price)
     {
         try
@@ -98,7 +97,8 @@ public class EditBook extends JDialog
             e.printStackTrace();
         }
     }
-
+*/
+    /*
     private void deleteBook(Book book)
     {
         try
@@ -121,4 +121,6 @@ public class EditBook extends JDialog
             e.printStackTrace();
         }
     }
+
+     */
 }

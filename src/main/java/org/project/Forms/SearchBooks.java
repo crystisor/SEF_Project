@@ -1,5 +1,6 @@
 package org.project.Forms;
 
+import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.Entities.Book;
 import org.project.Services.BookListCellRenderer;
 import org.project.Entities.Library;
@@ -9,19 +10,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
+import java.util.List;
 
 public class SearchBooks extends  JDialog
 {
-    private static final String dbURL = "jdbc:mysql://127.0.0.1/sef_project";
-    private static final String dbUser = "cristi";
-    private static final String dbPassword ="qwertyuiop";
-
     private static Library root;
     private JPanel searchBooksPanel;
     private JTextField tfSearchBook;
     private JList<Book> bookList;
     private JButton searchButton;
     private JButton cancelButton;
+    private IBookRepo bookRepo;
 
     public SearchBooks(JDialog parent, Library root)
     {
@@ -41,7 +40,7 @@ public class SearchBooks extends  JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                Book book = search(tfSearchBook.getText());
+                Book book = bookRepo.getBookByName(tfSearchBook.getText());
                 if (book != null)
                 {
                     EditBook editBook = new EditBook(SearchBooks.this, book);
@@ -60,10 +59,12 @@ public class SearchBooks extends  JDialog
                 dispose();
             }
         });
-        displayBooks();
+        //displayBooks();
+        updateBookList(bookRepo.getBooksByLibraryName(root.getName()));
         setVisible(true);
     }
 
+    /*
     private Book search(String bookName) // for text field
     {
         try
@@ -90,7 +91,9 @@ public class SearchBooks extends  JDialog
             e.printStackTrace();
         }
         return null;
-    }
+
+     */
+    /*
 
     private void displayBooks()
     {
@@ -121,6 +124,16 @@ public class SearchBooks extends  JDialog
         {
             e.printStackTrace();
         }
+    }
+     */
+    public void updateBookList(List<Book> books) {
+
+        DefaultListModel<Book> bookListModel = new DefaultListModel<>();
+        for (Book book : books) {
+            System.out.println("Book: " + book.getImage_url());
+            bookListModel.addElement(book);
+        }
+        bookList.setModel(bookListModel);
     }
 
     public static void main(String[] args)

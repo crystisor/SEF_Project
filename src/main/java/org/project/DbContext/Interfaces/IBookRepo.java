@@ -7,5 +7,7 @@ import java.util.List;
 public interface IBookRepo {
 
     Book getBookByName(String name);
-    public List<Book> getBooksByLibraryName(String libraryName);
+    List<Book> getBooksByLibraryName(String libraryName);
+    void editBook(Book book, String editQuantity, String editPrice);
+    void deleteBook(Book book);
 }
