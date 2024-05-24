@@ -2,7 +2,6 @@
 
 
     import org.project.DbContext.Interfaces.IOrderRepo;
-    import org.project.DbContext.Repos.OrderRepo;
     import org.project.Entities.Library;
     import org.project.Entities.Order;
     import org.project.Entities.Book;
@@ -12,6 +11,8 @@
     import java.awt.*;
     import java.awt.event.ActionEvent;
     import java.awt.event.ActionListener;
+    import java.lang.reflect.Array;
+    import java.util.ArrayList;
     import java.util.List;
     import java.util.stream.Collectors;
 
@@ -27,7 +28,8 @@
         private static Library root;
         IOrderRepo _orderRepo;
 
-        public ViewOrdersForm(JDialog parent, List<Order> orders, Library root, IOrderRepo orderRepo) {
+        public ViewOrdersForm(JDialog parent, List<Order> orders, Library root, IOrderRepo orderRepo)
+        {
             super(parent);
             setTitle("ViewOrders");
             setContentPane(viewOrdersPanel);
@@ -146,25 +148,19 @@
 
             setVisible(true);
         }
-        public static String[][] listToArrayOfStrings(List<Order> orders) {
-            int count = 0; // ok rows
-            for (Order order : orders)
-            {
-                if (order.getLibraryID().equals(ViewOrdersForm.root.getID()))
-                    count++;
-            }
+        public static String[][] listToArrayOfStrings(List<Order> orders)
+        {
             String[][] arr = new String[100][3];
-            for (int i = 0; i < orders.size(); i++) {
+            for (int i = 0; i < orders.size(); i++)
+            {
                 Order order = orders.get(i);
-                System.out.println(orders.get(i).getLibraryID());
-                System.out.println(ViewOrdersForm.root.getID());
-                if (order.getLibraryID().equals(ViewOrdersForm.root.getID()))
                 {
                     arr[i][0] = order.getOrderID();
                     arr[i][1] = order.getDate();
                     arr[i][2] = order.getBooks().stream()
                             .map(Book::getName)
                             .collect(Collectors.joining(", "));
+
                 }
             }
             return arr;

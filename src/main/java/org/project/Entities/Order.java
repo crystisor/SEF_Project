@@ -1,8 +1,6 @@
 package org.project.Entities;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Order {
@@ -11,8 +9,11 @@ public class Order {
     private String date;
     private List<Book> books;
     private String userID;
-    private String LibraryID;
 
+    public Order()
+    {
+
+    }
     public String getOrderID()
     {
         return orderID;
@@ -51,16 +52,6 @@ public class Order {
     public void setUserID(String userID)
     {
         this.userID = userID;
-    }
-
-    public String getLibraryID()
-    {
-        return LibraryID;
-    }
-
-    public void setLibraryID(String libraryID)
-    {
-        LibraryID = libraryID;
     }
 
     @Override

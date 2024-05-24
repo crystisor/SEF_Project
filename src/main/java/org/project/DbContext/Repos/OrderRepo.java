@@ -3,6 +3,7 @@ package org.project.DbContext.Repos;
 import org.project.DbContext.DbConfig;
 import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.Entities.Book;
+import org.project.Entities.Library;
 import org.project.Entities.Order;
 
 import java.sql.*;
@@ -43,16 +44,28 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
     }
 
     private boolean addBooksToOrder(int orderId, List<Book> books) {
-        String insertOrderDetailsSQL = "INSERT INTO OrderDetails (OrderID, BookID) VALUES (?, ?)";
+        String insertOrderDetailsSQL = "INSERT INTO OrderDetails (OrderID, BookID, Library_id) VALUES (?, ?, ?)";
+        String selectLibraryIdSQL = "SELECT library_id FROM Books WHERE Name = ?";
         boolean success = false;
 
         try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-             PreparedStatement orderDetailsStatement = connection.prepareStatement(insertOrderDetailsSQL)) {
+             PreparedStatement orderDetailsStatement = connection.prepareStatement(insertOrderDetailsSQL);
+             PreparedStatement libraryIdStatement = connection.prepareStatement(selectLibraryIdSQL)) {
 
             for (Book book : books) {
-                orderDetailsStatement.setInt(1, orderId);
-                orderDetailsStatement.setString(2, book.getIsbn());
-                orderDetailsStatement.executeUpdate();
+                libraryIdStatement.setString(1, book.getName());
+                try (ResultSet resultSet = libraryIdStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String libraryId = resultSet.getString("library_id");
+
+                        orderDetailsStatement.setInt(1, orderId);
+                        orderDetailsStatement.setString(2, book.getIsbn());
+                        orderDetailsStatement.setString(3, libraryId);
+                        orderDetailsStatement.executeUpdate();
+                    } else {
+                        System.out.println("Library ID not found for book: " + book.getName());
+                    }
+                }
             }
             success = true;
         } catch (SQLException e) {
@@ -60,6 +73,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         }
         return success;
     }
+
 
 
 
@@ -93,52 +107,53 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         return "Orders: " + orderCount;
     }
 
-    public List<Order> getOrders() {
+    public List<Order> getOrders(String libraryID)
+    {
         List<Order> orders = new ArrayList<>();
-        try {
-            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-            Statement st = conn.createStatement();
-            String query = "SELECT * FROM Orders";
-            ResultSet rs = st.executeQuery(query);
+        try
+        {
+            Connection conn =DriverManager.getConnection(dbURL, dbUser, dbPassword);
+            Statement getOrdersStatement = conn.createStatement();
+            String getOrdersQuery = "SELECT ID_order, User_id, Date FROM Orders";
+            ResultSet rs = getOrdersStatement.executeQuery(getOrdersQuery);
 
             while (rs.next())
             {
                 Order order = new Order();
                 order.setOrderID(rs.getString("ID_order"));
-                order.setDate(rs.getString("Date"));
                 order.setUserID(rs.getString("User_id"));
-                order.setLibraryID(rs.getString("Library_id"));
+                order.setDate(rs.getString("Date"));
 
-                String orderID = rs.getString("ID_order");
-                String queryGetOrderDetails = "SELECT BookID FROM OrderDetails WHERE OrderID=" + orderID;
-                Statement stBooks = conn.createStatement();
-                ResultSet rsBooksID = stBooks.executeQuery(queryGetOrderDetails);
+                Statement getOrderDetailsStatement = conn.createStatement();
+                String getOrderDetailsQuery = "SELECT BookID FROM OrderDetails WHERE OrderDetails.Library_id = " + libraryID;
+                ResultSet resultSet = getOrderDetailsStatement.executeQuery(getOrderDetailsQuery);
 
                 List<Book> books = new ArrayList<>();
-                while (rsBooksID.next())
+                while (resultSet.next())
                 {
-                    String bookID = rsBooksID.getString("BookID");
-                    String queryGetBookDetails = "SELECT * FROM Books WHERE ISBN=" + bookID;
-                    Statement stBook = conn.createStatement();
-                    ResultSet rsBook = stBook.executeQuery(queryGetBookDetails);
-                    while (rsBook.next())
+                    Statement getBookDetailsStatement = conn.createStatement();
+                    String getBookDetailsQuery = "SELECT * FROM Books WHERE Books.ISBN = '" + resultSet.getString("BookID") + "'";
+                    ResultSet resultSetBook = getBookDetailsStatement.executeQuery(getBookDetailsQuery);
+
+                    while (resultSetBook.next())
                     {
-                        Book book = new Book(rsBook.getString("Name"), rsBook.getString("Author"), rsBook.getString("ISBN"),
-                                rsBook.getString("Price"), rsBook.getString("Quantity"), rsBook.getString("Image_url"));
+                        System.out.println(resultSetBook.getString("ISBN"));
+                        Book book = new Book( resultSetBook.getString("Name"), resultSetBook.getString("Author"), resultSetBook.getString("ISBN"),
+                                resultSetBook.getString("Price"), resultSetBook.getString("Quantity"), resultSetBook.getString("Image_url"));
                         books.add(book);
                     }
+                    getBookDetailsStatement.close();
                 }
                 order.setBooks(books);
-
-                rsBooksID.close();
-                stBooks.close();
-
+                getOrderDetailsStatement.close();
                 orders.add(order);
             }
-            rs.close();
-            st.close();
+            getOrdersStatement.close();
             conn.close();
-        } catch (SQLException e) {
+
+        }
+        catch (Exception e)
+        {
             e.printStackTrace();
         }
         return orders;

@@ -145,6 +145,4 @@ public class BookRepo extends DbConfig implements IBookRepo {
             e.printStackTrace();
         }
     }
-
-
 }

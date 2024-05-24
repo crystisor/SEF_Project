@@ -13,7 +13,7 @@ import java.util.List;
 public class LibraryRepo extends DbConfig implements ILibraryRepo {
 
     public List<String> getLibraryNames() {
-        List<String> libraryNames = new ArrayList<>();
+        List<String> libraryIds = new ArrayList<>();
 
         try {
             Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
@@ -21,7 +21,7 @@ public class LibraryRepo extends DbConfig implements ILibraryRepo {
             ResultSet resultSet = statement.executeQuery("SELECT name FROM Libraries");
 
             while (resultSet.next()) {
-                libraryNames.add(resultSet.getString("name"));
+                libraryIds.add(resultSet.getString("name"));
             }
 
             resultSet.close();
@@ -31,6 +31,6 @@ public class LibraryRepo extends DbConfig implements ILibraryRepo {
             e.printStackTrace();
         }
 
-        return libraryNames;
+        return libraryIds;
     }
 }
