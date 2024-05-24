@@ -44,6 +44,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
     }
 
     private boolean addBooksToOrder(int orderId, List<Book> books) {
+
         String insertOrderDetailsSQL = "INSERT INTO OrderDetails (OrderID, BookID, Library_id) VALUES (?, ?, ?)";
         String selectLibraryIdSQL = "SELECT library_id FROM Books WHERE Name = ?";
         boolean success = false;
@@ -73,8 +74,6 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         }
         return success;
     }
-
-
 
 
     public String countOrders()
@@ -125,7 +124,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 order.setDate(rs.getString("Date"));
 
                 Statement getOrderDetailsStatement = conn.createStatement();
-                String getOrderDetailsQuery = "SELECT BookID FROM OrderDetails WHERE OrderDetails.Library_id = " + libraryID;
+                String getOrderDetailsQuery = "SELECT BookID FROM OrderDetails WHERE OrderDetails.Library_id = '" + libraryID + "' AND OrderDetails.OrderID = '" + order.getOrderID() + "'" ;
                 ResultSet resultSet = getOrderDetailsStatement.executeQuery(getOrderDetailsQuery);
 
                 List<Book> books = new ArrayList<>();
@@ -135,7 +134,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                     String getBookDetailsQuery = "SELECT * FROM Books WHERE Books.ISBN = '" + resultSet.getString("BookID") + "'";
                     ResultSet resultSetBook = getBookDetailsStatement.executeQuery(getBookDetailsQuery);
 
-                    while (resultSetBook.next())
+                    if (resultSetBook.next())
                     {
                         System.out.println(resultSetBook.getString("ISBN"));
                         Book book = new Book( resultSetBook.getString("Name"), resultSetBook.getString("Author"), resultSetBook.getString("ISBN"),
@@ -146,7 +145,9 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 }
                 order.setBooks(books);
                 getOrderDetailsStatement.close();
-                orders.add(order);
+
+                if( !order.getBooks().isEmpty())
+                    orders.add(order);
             }
             getOrdersStatement.close();
             conn.close();
