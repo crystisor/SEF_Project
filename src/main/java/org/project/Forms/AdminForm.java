@@ -91,6 +91,16 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                List<Order> orders = _orderRepo.getOrders(root.getID());
+                for (Order order : orders)
+                {
+                    System.out.println("Order: " + order.getOrderID());
+                    for (Book book : order.getBooks())
+                    {
+                        System.out.print(book.getName() + " ");
+                    }
+                    System.out.println();
+                }
                 ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders(root.getID()), AdminForm.root, _orderRepo);
             }
         });
