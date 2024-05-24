@@ -76,8 +76,6 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
     }
 
 
-
-
     public String countOrders()
     {
         int orderCount = -1;
