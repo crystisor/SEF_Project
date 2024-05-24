@@ -10,7 +10,7 @@ public interface IOrderRepo {
     int createOrder(int userId, List<Book> books);
     String countOrders();
 
-    List<Order> getOrders();
+    List<Order> getOrders(String libraryID);
 
     void deleteOrder(int orderId);
 

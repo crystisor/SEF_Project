@@ -8,6 +8,7 @@ public class Book
     private String price;
     private String quantity;
     private String image_url;
+    private String libraryID;
 
     public Book(String name, String author, String isbn, String price, String quantity, String image_url)
     {
@@ -73,6 +74,12 @@ public class Book
     {
         return image_url;
     }
+
+    public void setImage_url(String image_url)
+    {
+        this.image_url = image_url;
+    }
+
 
     @Override
     public String toString()
