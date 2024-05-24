@@ -143,5 +143,67 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         }
         return orders;
     }
+
+    public void deleteOrder(int orderID)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement stOrdersDetails = conn.createStatement();
+            String deleteOrderDetails = "DELETE FROM OrderDetails WHERE OrderID=" + orderID;
+
+            int rowsDeleted = stOrdersDetails.executeUpdate(deleteOrderDetails);
+            if (rowsDeleted > 0)
+                System.out.println("Order details deleted successfully");
+            else
+                System.out.println("Error deleting order details");
+
+            Statement stOrders = conn.createStatement();
+            String deleteOrders = "DELETE FROM Orders WHERE ID_order=" + orderID;
+
+            rowsDeleted = stOrders.executeUpdate(deleteOrders);
+            if (rowsDeleted > 0)
+                System.out.println("Order deleted successfully");
+            else
+                System.out.println("Error deleteing orders");
+
+            stOrders.close();
+            stOrdersDetails.close();
+            conn.close();
+        }
+         catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendUserFeedback(int orderID, String feedback)
+    {
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement selectUser = conn.createStatement();
+            String selectUserQuery = "SELECT User_id from Orders WHERE Orders.ID_order =" + orderID;
+            ResultSet rs = selectUser.executeQuery(selectUserQuery);
+
+            while (rs.next())
+            {
+                String updateFeedbackQuery = "INSERT INTO Feedbacks (Text, User_id) VALUES (?, ?)";
+
+                PreparedStatement updateUser = conn.prepareStatement(updateFeedbackQuery);
+                updateUser.setString(1, feedback);
+                updateUser.setString(2, rs.getString(1));
+                updateUser.executeUpdate();
+
+            }
+
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+    }
 }
 

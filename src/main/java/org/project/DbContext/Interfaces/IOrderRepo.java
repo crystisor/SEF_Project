@@ -9,5 +9,10 @@ public interface IOrderRepo {
 
     int createOrder(int userId, List<Book> books);
     String countOrders();
+
     List<Order> getOrders();
+
+    void deleteOrder(int orderId);
+
+    void sendUserFeedback(int userID, String feedback);
 }
