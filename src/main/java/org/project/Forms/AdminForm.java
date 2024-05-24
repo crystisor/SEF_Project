@@ -91,7 +91,7 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders(), AdminForm.root);
+                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders(), AdminForm.root, _orderRepo);
             }
         });
         this._userRepo = new UserRepo();
@@ -157,7 +157,7 @@ public class AdminForm extends JDialog
 
     public static void main(String[] args)
     {
-        Library lib = new Library("1","Carturesti","aaaaa","aaaa","aaaa");
+        Library lib = new Library("2","Carturesti","aaaaa","aaaa","aaaa");
         AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo(), new OrderRepo());
     }
 }

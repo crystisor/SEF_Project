@@ -8,7 +8,14 @@ import java.util.List;
 public interface IOrderRepo {
 
     boolean addBookToOrder(int orderId,Book book);
+
     int createOrder(String email);
+
     String countOrders();
+
     List<Order> getOrders();
+
+    void deleteOrder(int orderId);
+
+    void sendUserFeedback(int userID, String feedback);
 }
