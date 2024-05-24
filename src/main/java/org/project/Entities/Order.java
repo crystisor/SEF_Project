@@ -62,4 +62,16 @@ public class Order {
     {
         LibraryID = libraryID;
     }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o == this)
+            return true;
+        if (!(o instanceof Order))
+            return false;
+
+        Order order = (Order) o;
+        return orderID.equals(order.getOrderID());
+    }
 }

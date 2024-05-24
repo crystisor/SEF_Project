@@ -31,6 +31,10 @@
             ViewOrdersForm.root = root;
             System.out.println(root.getID());
             System.out.println(ViewOrdersForm.root.getID());
+            for (Order order : orders)
+            {
+                System.out.println(order.getBooks() + " " + order.getLibraryID());
+            }
             listToArrayOfStrings(orders);
             ViewOrdersForm.rows = listToArrayOfStrings(orders);
 
@@ -41,6 +45,7 @@
 
             setVisible(true);
         }
+
         public static String[][] listToArrayOfStrings(List<Order> orders) {
             int count = 0; // ok rows
             for (Order order : orders)
