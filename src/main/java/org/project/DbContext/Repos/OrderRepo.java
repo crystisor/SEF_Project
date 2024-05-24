@@ -43,16 +43,28 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
     }
 
     private boolean addBooksToOrder(int orderId, List<Book> books) {
-        String insertOrderDetailsSQL = "INSERT INTO OrderDetails (OrderID, BookID) VALUES (?, ?)";
+        String insertOrderDetailsSQL = "INSERT INTO OrderDetails (OrderID, BookID, Library_id) VALUES (?, ?, ?)";
+        String selectLibraryIdSQL = "SELECT library_id FROM Books WHERE Name = ?";
         boolean success = false;
 
         try (Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
-             PreparedStatement orderDetailsStatement = connection.prepareStatement(insertOrderDetailsSQL)) {
+             PreparedStatement orderDetailsStatement = connection.prepareStatement(insertOrderDetailsSQL);
+             PreparedStatement libraryIdStatement = connection.prepareStatement(selectLibraryIdSQL)) {
 
             for (Book book : books) {
-                orderDetailsStatement.setInt(1, orderId);
-                orderDetailsStatement.setString(2, book.getIsbn());
-                orderDetailsStatement.executeUpdate();
+                libraryIdStatement.setString(1, book.getName());
+                try (ResultSet resultSet = libraryIdStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        String libraryId = resultSet.getString("library_id");
+
+                        orderDetailsStatement.setInt(1, orderId);
+                        orderDetailsStatement.setString(2, book.getIsbn());
+                        orderDetailsStatement.setString(3, libraryId);
+                        orderDetailsStatement.executeUpdate();
+                    } else {
+                        System.out.println("Library ID not found for book: " + book.getName());
+                    }
+                }
             }
             success = true;
         } catch (SQLException e) {
@@ -60,6 +72,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         }
         return success;
     }
+
 
 
 
@@ -107,16 +120,17 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 order.setOrderID(rs.getString("ID_order"));
                 order.setDate(rs.getString("Date"));
                 order.setUserID(rs.getString("User_id"));
-                order.setLibraryID(rs.getString("Library_id"));
 
                 String orderID = rs.getString("ID_order");
-                String queryGetOrderDetails = "SELECT BookID FROM OrderDetails WHERE OrderID=" + orderID;
+                String queryGetOrderDetails = "SELECT BookID, Library_id FROM OrderDetails WHERE OrderID=" + orderID;
                 Statement stBooks = conn.createStatement();
                 ResultSet rsBooksID = stBooks.executeQuery(queryGetOrderDetails);
 
                 List<Book> books = new ArrayList<>();
                 while (rsBooksID.next())
                 {
+                    if (order.getLibraryID() == null)
+                        order.setLibraryID(rsBooksID.getString("Library_id"));
                     String bookID = rsBooksID.getString("BookID");
                     String queryGetBookDetails = "SELECT * FROM Books WHERE ISBN=" + bookID;
                     Statement stBook = conn.createStatement();

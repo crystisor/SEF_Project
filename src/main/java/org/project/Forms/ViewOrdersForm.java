@@ -165,6 +165,7 @@
                     arr[i][2] = order.getBooks().stream()
                             .map(Book::getName)
                             .collect(Collectors.joining(", "));
+                    System.out.println("Order: " + i + arr[i][0] + " " + arr[i][1] + " " + arr[i][2]);
                 }
             }
             return arr;
