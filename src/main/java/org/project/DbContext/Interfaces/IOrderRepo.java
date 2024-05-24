@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface IOrderRepo {
 
-    int createOrder(int userId, List<Book> books);
+    int createOrder(String userId, List<Book> books);
     String countOrders();
 
-    List<Order> getOrders(String libraryID);
-
+    List<Order> getOrdersByLibraryId(String libraryID);
+    List<Order> getOrdersByUserId(String userId);
     void deleteOrder(int orderId);
 
     void sendUserFeedback(int userID, String feedback);

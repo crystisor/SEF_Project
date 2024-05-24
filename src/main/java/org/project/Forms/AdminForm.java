@@ -8,7 +8,6 @@ import org.project.DbContext.Repos.OrderRepo;
 import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.Library;
-import org.project.Entities.Order;
 import org.project.Services.BookService;
 
 
@@ -16,7 +15,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class AdminForm extends JDialog
 {
@@ -91,7 +89,7 @@ public class AdminForm extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrders(root.getID()), AdminForm.root, _orderRepo);
+                ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrdersByLibraryId(root.getID()), AdminForm.root, _orderRepo);
             }
         });
         this._userRepo = new UserRepo();
@@ -157,7 +155,7 @@ public class AdminForm extends JDialog
 
     public static void main(String[] args)
     {
-        Library lib = new Library("1","carturesti","aaaaa","aaaa","aaaa");
+        Library lib = new Library("2","carturesti","aaaaa","aaaa","aaaa");
         AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo(), new OrderRepo());
     }
 }

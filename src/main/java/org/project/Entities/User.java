@@ -3,7 +3,7 @@ import org.project.Services.UserService;
 
 public class User {
 
-    int userId;
+    String userId;
     String firstName;
     String lastName;
     String email;
@@ -11,7 +11,7 @@ public class User {
     String phone;
     String password;
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
@@ -66,7 +66,7 @@ public class User {
         return password;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }

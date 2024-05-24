@@ -2,7 +2,6 @@ package org.project.Forms;
 
 import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.DbContext.Interfaces.ILibraryRepo;
-import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.DbContext.Repos.BookRepo;
 import org.project.DbContext.Repos.LibraryRepo;
 import org.project.DbContext.Repos.OrderRepo;
@@ -12,6 +11,8 @@ import org.project.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,8 @@ public class UserForm extends JDialog {
     private JList<String> libList;
     private JList<Book> bookList;
     private JLabel Icon;
+    private JButton btnOrders;
+    private JPanel accPanel;
     IBookRepo _bookRepo;
     ILibraryRepo _libraryRepo;
     //IOrderRepo _orderRepo;
@@ -58,16 +61,24 @@ public class UserForm extends JDialog {
 
         // Add components to the panel
         bookPanel.setLayout(new BoxLayout(bookPanel, BoxLayout.X_AXIS));
-        bookPanel.add(orderDetails);
-        bookPanel.add(Box.createHorizontalStrut(10)); // Add space between buttons
+        bookPanel.add(Box.createHorizontalStrut(10));
         bookPanel.add(addBooktoOrder);
         bookPanel.add(Box.createHorizontalStrut(10)); // Add space between buttons
-        bookPanel.add(addFunds);
+        bookPanel.add(orderDetails);
+        bookPanel.add(Box.createHorizontalStrut(10)); // Add space between buttons
 
         userPanel.add(libScrollPane, BorderLayout.WEST);
         userPanel.add(bookScrollPane, BorderLayout.CENTER);
         userPanel.add(bookPanel, BorderLayout.SOUTH);
-        userPanel.add(Icon, BorderLayout.NORTH);
+
+        accPanel.setLayout(new BoxLayout(accPanel, BoxLayout.X_AXIS));
+        accPanel.add(Icon, BorderLayout.WEST);
+        accPanel.add(Box.createHorizontalStrut(400));
+        accPanel.add(btnOrders, BorderLayout.EAST);
+        accPanel.add(Box.createHorizontalStrut(10));
+        accPanel.add(addFunds, BorderLayout.EAST);
+
+        userPanel.add(accPanel, BorderLayout.NORTH);
 
         setContentPane(userPanel);
 
@@ -107,6 +118,10 @@ public class UserForm extends JDialog {
             }
         });
 
+        btnOrders.addActionListener(e -> {
+                ViewOrdersUserForm userOrdersForm = new ViewOrdersUserForm(this, user.getUserId(), new OrderRepo());
+        });
+
         setVisible(true);
     }
 
@@ -122,7 +137,7 @@ public class UserForm extends JDialog {
     public static void main(String[] args) {
 
         User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as");
-        u.setUserId(38);
+        u.setUserId("39");
         SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo()));
     }
 }

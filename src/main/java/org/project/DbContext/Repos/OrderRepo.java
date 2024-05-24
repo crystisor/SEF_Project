@@ -13,7 +13,7 @@ import java.util.List;
 public class OrderRepo extends DbConfig implements IOrderRepo {
 
 
-    public int createOrder(int userId,List<Book> books) {
+    public int createOrder(String userId,List<Book> books) {
 
         int orderId = -1;
         String insertOrderSQL = "INSERT INTO `Orders` (User_id, Date) VALUES (?, ?)";
@@ -23,7 +23,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 Connection connection = DriverManager.getConnection(dbURL, dbUser, dbPassword);
                 PreparedStatement orderStatement = connection.prepareStatement(insertOrderSQL, Statement.RETURN_GENERATED_KEYS)) {
 
-            orderStatement.setInt(1, userId);
+            orderStatement.setString(1, userId);
             orderStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
             int rowsAffected = orderStatement.executeUpdate();
 
@@ -33,6 +33,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                     orderId = generatedKeys.getInt(1);
                 }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -106,7 +107,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         return "Orders: " + orderCount;
     }
 
-    public List<Order> getOrders(String libraryID)
+    public List<Order> getOrdersByLibraryId(String libraryID)
     {
         List<Order> orders = new ArrayList<>();
         try
@@ -157,6 +158,34 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         {
             e.printStackTrace();
         }
+        return orders;
+    }
+
+    @Override
+    public List<Order> getOrdersByUserId(String userId) {
+        List<Order> orders = new ArrayList<>();
+
+        String getOrdersQuery = "SELECT ID_order, User_id, Date FROM Orders WHERE User_id = ?";
+
+        try (
+                Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+                PreparedStatement getOrdersStatement = conn.prepareStatement(getOrdersQuery)
+        ) {
+            getOrdersStatement.setString(1, userId);
+
+            try (ResultSet rs = getOrdersStatement.executeQuery()) {
+                while (rs.next()) {
+                    Order order = new Order();
+                    order.setOrderID(rs.getString("ID_order"));
+                    order.setUserID(rs.getString("User_id"));
+                    order.setDate(rs.getString("Date"));
+                    orders.add(order);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         return orders;
     }
 
