@@ -33,6 +33,7 @@ public class AdminForm extends JDialog
     private JLabel Users;
     private JLabel orderCount;
     private JLabel userCountLabel;
+    private JLabel libLabel;
     private JTextField tfSearch;
     private JTextArea tfaSearch;
     private JTextField tfAddBookName;
@@ -106,6 +107,7 @@ public class AdminForm extends JDialog
             }
         });
         this._userRepo = new UserRepo();
+        libLabel.setText("Welcome, " + root.getEmail() + "!");
         setVisible(true);
     }
 

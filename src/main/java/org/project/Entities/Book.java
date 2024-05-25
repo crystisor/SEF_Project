@@ -84,7 +84,7 @@ public class Book
     @Override
     public String toString()
     {
-        String content = "Name: " + getName() + "   Author: " + getAuthor() + "  Price: " + getPrice() + "$   Quantity: " + getQuantity();
+        String content = "Name: " + getName() + "   Author: " + getAuthor() + "  Price: " + getPrice() + "$";
         return content;
     }
 }

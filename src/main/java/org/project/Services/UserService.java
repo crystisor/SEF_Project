@@ -40,8 +40,6 @@ public class UserService {
 
     public boolean isPhoneValid(String phone) {
 
-        if( phone.length()!=10 )
-            return false;
         // Regular expression pattern for phone number validation
         String phoneRegex = "^(?:[0-9] ?){6,14}[0-9]$";
 

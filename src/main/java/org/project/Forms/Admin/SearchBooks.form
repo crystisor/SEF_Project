@@ -41,6 +41,7 @@
           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-197121"/>
           <font name="Arial Black" size="14" style="1"/>
           <text value="Search"/>
         </properties>
@@ -50,6 +51,7 @@
           <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-197121"/>
           <font name="Arial Black" size="14" style="1"/>
           <text value="Cancel"/>
         </properties>

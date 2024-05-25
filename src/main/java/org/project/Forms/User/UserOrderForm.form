@@ -12,7 +12,7 @@
     <children>
       <component id="fbc70" class="javax.swing.JList" binding="orderList">
         <constraints>
-          <grid row="0" column="2" row-span="1" col-span="2" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+          <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="50"/>
           </grid>
         </constraints>
@@ -25,6 +25,7 @@
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-263425"/>
           <font name="Arial Black" size="12" style="1"/>
           <text value="Cancel"/>
         </properties>
@@ -34,6 +35,7 @@
           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-263425"/>
           <font name="Arial Black" size="12" style="1"/>
           <text value="Confirm"/>
         </properties>
@@ -43,6 +45,7 @@
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-263425"/>
           <font name="Arial Black" size="12" style="1"/>
           <text value="Remove"/>
         </properties>
