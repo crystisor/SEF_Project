@@ -44,6 +44,14 @@ public class User {
         return 0;
     }
 
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
     public String getFirstName() {
         return firstName;
     }

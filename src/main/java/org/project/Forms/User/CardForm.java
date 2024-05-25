@@ -47,6 +47,10 @@ public class CardForm extends JDialog{
                 if( card.validateCreditCardInfo() )
                         if( !_userRepo.updateUserFunds(userId, card.getAmount() ) )
                             JOptionPane.showMessageDialog(CardForm.this, "It seems there was an error retrieving user info!");
+                        else {
+                            JOptionPane.showMessageDialog(CardForm.this, "Payment succesful!");
+                            dispose();
+                        }
                 else
                     JOptionPane.showMessageDialog(CardForm.this, "Invalid credit card information!");
             }

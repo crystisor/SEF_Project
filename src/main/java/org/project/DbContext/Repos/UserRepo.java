@@ -19,8 +19,8 @@ public class UserRepo extends DbConfig implements IUserRepo {
         try {
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
             Statement st = conn.createStatement();
-            String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password)" +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO Users (first_name,last_name,email,address,phone_number,password, balance)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement insertUserStatement = conn.prepareStatement(query);
             insertUserStatement.setString(1,user.getFirstName());
@@ -29,6 +29,7 @@ public class UserRepo extends DbConfig implements IUserRepo {
             insertUserStatement.setString(4,user.getAddress());
             insertUserStatement.setString(5,user.getPhone());
             insertUserStatement.setString(6,encryptedPassword);
+            insertUserStatement.setString(7,user.getBalance());
             int addedRowsUser = insertUserStatement.executeUpdate();
 
             if (addedRowsUser > 0)
