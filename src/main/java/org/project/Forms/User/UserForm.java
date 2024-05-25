@@ -116,6 +116,7 @@ public class UserForm extends JDialog {
         orderDetails.addActionListener(e -> {
             if (!order.isEmpty()) {
                 UserOrderForm userOrder = new UserOrderForm(this, user, order, new OrderRepo(), new UserRepo(), new BookRepo());
+                balLabel.setText("Current balance: " + user.getBalance() + "$");
             } else {
                 JOptionPane.showMessageDialog(UserForm.this, "Please add at least one book to the order.");
             }
