@@ -59,7 +59,7 @@ public class AdminForm extends JDialog
         super(parent);
         setTitle("Root");
         setContentPane(RootPanel);
-        setMinimumSize(new Dimension(500,500));
+        setMinimumSize(new Dimension(500,600));
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

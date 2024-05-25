@@ -24,7 +24,7 @@ public class EditBook extends JDialog {
         EditBook.book = book;
         setTitle("Edit books");
         setContentPane(editPanel);
-        setMinimumSize(new Dimension(500, 500));
+        setMinimumSize(new Dimension(300, 300));
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

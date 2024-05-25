@@ -28,7 +28,7 @@ public class UserOrderForm extends JDialog {
     public UserOrderForm(JDialog parent, User user, List<Book> selectedBooks, IOrderRepo orderRepo) {
         super(parent);
         setTitle("Order");
-        setMinimumSize(new Dimension(800, 500));
+        setMinimumSize(new Dimension(400, 400));
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

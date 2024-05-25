@@ -122,6 +122,10 @@ public class UserForm extends JDialog {
                 ViewOrdersUserForm userOrdersForm = new ViewOrdersUserForm(this, user.getUserId(), new OrderRepo());
         });
 
+        addFunds.addActionListener( e -> {
+                CardForm cardForm = new CardForm(this);
+        });
+
         setVisible(true);
     }
 

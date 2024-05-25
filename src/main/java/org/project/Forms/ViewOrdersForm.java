@@ -30,7 +30,7 @@ public class ViewOrdersForm extends JDialog {
         super(parent);
         setTitle("ViewOrders");
         setContentPane(viewOrdersPanel);
-        setMinimumSize(new Dimension(500, 500));
+        setMinimumSize(new Dimension(600, 400));
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
