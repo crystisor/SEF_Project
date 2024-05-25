@@ -172,12 +172,15 @@ public class ViewOrdersForm extends JDialog {
         {
             Order order = orders.get(i);
             {
-                arr[i][0] = order.getOrderID();
-                arr[i][1] = order.getDate();
-                arr[i][2] = order.getBooks().stream()
-                        .map(Book::getName)
-                        .collect(Collectors.joining("\n"));
-                arr[i][3] = order.getBooks().get(0).getImage_url();
+                if (order.getFeedback() == "Pending")
+                {
+                    arr[i][0] = order.getOrderID();
+                    arr[i][1] = order.getDate();
+                    arr[i][2] = order.getBooks().stream()
+                            .map(Book::getName)
+                            .collect(Collectors.joining("\n"));
+                    arr[i][3] = order.getBooks().get(0).getImage_url();
+                }
             }
         }
         return arr;
