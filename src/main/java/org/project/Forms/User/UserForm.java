@@ -27,6 +27,7 @@ public class UserForm extends JDialog {
     private JLabel Icon;
     private JButton btnOrders;
     private JPanel accPanel;
+    private JLabel balLabel;
     IBookRepo _bookRepo;
     ILibraryRepo _libraryRepo;
     //IOrderRepo _orderRepo;
@@ -75,7 +76,11 @@ public class UserForm extends JDialog {
 
         accPanel.setLayout(new BoxLayout(accPanel, BoxLayout.X_AXIS));
         accPanel.add(Icon, BorderLayout.WEST);
+        accPanel.add(Box.createHorizontalStrut(300));
+        accPanel.add(balLabel,BorderLayout.EAST);
+
         Icon.setText("Welcome " + user.getFirstName() + " " + user.getLastName() + "!");
+        balLabel.setText("Current balance: " + user.getBalance() + "$");
         userPanel.add(accPanel, BorderLayout.NORTH);
 
         setContentPane(userPanel);
@@ -110,7 +115,7 @@ public class UserForm extends JDialog {
 
         orderDetails.addActionListener(e -> {
             if (!order.isEmpty()) {
-                UserOrderForm userOrder = new UserOrderForm(this, user, order, new OrderRepo());
+                UserOrderForm userOrder = new UserOrderForm(this, user, order, new OrderRepo(), new UserRepo(), new BookRepo());
             } else {
                 JOptionPane.showMessageDialog(UserForm.this, "Please add at least one book to the order.");
             }
@@ -121,7 +126,8 @@ public class UserForm extends JDialog {
         });
 
         addFunds.addActionListener( e -> {
-                CardForm cardForm = new CardForm(this, user.getUserId(), new UserRepo());
+                CardForm cardForm = new CardForm(this, user, new UserRepo());
+                balLabel.setText("Current balance: " + user.getBalance() + "$");
         });
 
         setVisible(true);
@@ -140,6 +146,7 @@ public class UserForm extends JDialog {
 
         User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as","10");
         u.setUserId("39");
+        System.out.println(Double.parseDouble(u.getBalance()));
         SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo()));
     }
 }

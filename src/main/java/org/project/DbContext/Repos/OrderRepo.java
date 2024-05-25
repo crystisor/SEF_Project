@@ -77,36 +77,33 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         return success;
     }
 
-
-    public String countOrders()
-    {
-        int orderCount = -1;
+    public String countOrdersPerLibrary(String libraryId) {
+        int orderCount = 0;
         try {
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-            Statement st = conn.createStatement();
-            String query = "SELECT COUNT(*) AS orderCount FROM Orders";
+            // Query to count distinct OrderIDs from OrderDetails and check matching orders in Order table with Feedback='Pending'
+            String query = "SELECT COUNT(DISTINCT od.OrderID) AS orderCount " +
+                    "FROM OrderDetails od " +
+                    "JOIN `Orders` o ON od.OrderID = o.ID_order " +
+                    "WHERE od.Library_id = ? AND o.Feedback = 'Pending'";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, libraryId);
+            ResultSet rs = ps.executeQuery();
 
-            ResultSet rs = st.executeQuery(query);
-            if (rs.next())
-            {
+            if (rs.next()) {
                 orderCount = rs.getInt("orderCount");
-                System.out.println("Number of orders: " + orderCount);
-            } else
-            {
-                System.out.println("No orders found");
             }
 
             rs.close();
-            st.close();
+            ps.close();
             conn.close();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return "Orders: " + orderCount;
     }
+
 
     public List<Order> getOrdersByLibraryId(String libraryID)
     {

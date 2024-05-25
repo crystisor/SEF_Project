@@ -3,6 +3,7 @@ package org.project.Forms.User;
 import org.project.DbContext.Interfaces.IUserRepo;
 import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.CardInfo;
+import org.project.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +27,7 @@ public class CardForm extends JDialog{
     private JTextField tfAmount;
     IUserRepo _userRepo;
 
-    public CardForm(JDialog parent, String userId, IUserRepo userRepo) {
+    public CardForm(JDialog parent, User user, IUserRepo userRepo) {
         super(parent);
         setTitle("Card Form");
         setContentPane(cardPanel);
@@ -44,11 +45,14 @@ public class CardForm extends JDialog{
             public void actionPerformed(ActionEvent e) {
 
                 CardInfo card = new CardInfo( tfNumber.getText(), tfOwner.getText(), tfExp.getText(), String.valueOf(pfCVV.getPassword()), tfAmount.getText());
+
                 if( card.validateCreditCardInfo() )
-                        if( !_userRepo.updateUserFunds(userId, card.getAmount() ) )
+
+                        if( !_userRepo.updateUserFunds(user.getUserId(), card.getAmount() ) )
                             JOptionPane.showMessageDialog(CardForm.this, "It seems there was an error retrieving user info!");
                         else {
-                            JOptionPane.showMessageDialog(CardForm.this, "Payment succesful!");
+                            JOptionPane.showMessageDialog(CardForm.this, "Reimburse succesful!");
+                            user.setBalance( Double.parseDouble(card.getAmount()) + Double.parseDouble(user.getBalance()) + "");
                             dispose();
                         }
                 else

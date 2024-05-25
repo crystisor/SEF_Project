@@ -29,7 +29,7 @@ public class SearchBooks extends  JDialog
         SearchBooks.root = root;
         setTitle("Search Books");
         setContentPane(searchBooksPanel);
-        setMinimumSize(new Dimension(400, 600));
+        setMinimumSize(new Dimension(600, 700));
         setModal(true);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -80,7 +80,7 @@ public class SearchBooks extends  JDialog
 
     public static void main(String[] args)
     {
-        Library lib = new Library("1","aaa","aaaaa","aaaa","aaaa");
+        Library lib = new Library("2","aaa","aaaaa","aaaa","aaaa");
         SearchBooks searchBooks = new SearchBooks(null,lib, new BookRepo());
     }
 }

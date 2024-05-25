@@ -1,10 +1,15 @@
 package org.project.Forms.User;
 
+import org.project.DbContext.Interfaces.IBookRepo;
 import org.project.DbContext.Interfaces.IOrderRepo;
+import org.project.DbContext.Interfaces.IUserRepo;
+import org.project.DbContext.Repos.BookRepo;
 import org.project.DbContext.Repos.OrderRepo;
+import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.User;
 import org.project.Services.BookListCellRenderer;
+import org.project.Services.OrderService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +26,10 @@ public class UserOrderForm extends JDialog {
     private JButton btnRemove;
     private DefaultListModel<Book> bookListModel;
     private IOrderRepo _orderRepo;
+    private IUserRepo _userRepo;
+    private IBookRepo _bookRepo;
 
-    public UserOrderForm(JDialog parent, User user, List<Book> selectedBooks, IOrderRepo orderRepo) {
+    public UserOrderForm(JDialog parent, User user, List<Book> selectedBooks, IOrderRepo orderRepo, IUserRepo userRepo,IBookRepo bookRepo) {
         super(parent);
         setTitle("Order");
         setMinimumSize(new Dimension(400, 400));
@@ -31,6 +38,8 @@ public class UserOrderForm extends JDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         _orderRepo = orderRepo;
+        _userRepo = userRepo;
+        _bookRepo = bookRepo;
 
         orderList.setCellRenderer(new BookListCellRenderer());
         orderPanel.setLayout(new BorderLayout());
@@ -61,10 +70,32 @@ public class UserOrderForm extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                _orderRepo.createOrder(user.getUserId(),selectedBooks);
-                JOptionPane.showMessageDialog(UserOrderForm.this, "Order confirmed!");
-                selectedBooks.clear();
-                dispose();
+                OrderService srv = new OrderService();
+                double orderPrice = srv.getPrice(selectedBooks);
+                System.out.println(orderPrice);
+                double crtBalance = Double.parseDouble(user.getBalance());
+
+                if( orderPrice == -1)
+                    JOptionPane.showMessageDialog(UserOrderForm.this, "One or more books are not in stock!");
+                else if( crtBalance < orderPrice )
+                    JOptionPane.showMessageDialog(UserOrderForm.this, "Insufficient balance!");
+                else {
+
+                    crtBalance -= orderPrice;
+                    user.setBalance(crtBalance + "");
+
+                    _orderRepo.createOrder(user.getUserId(), selectedBooks);
+                    _userRepo.updateUserFunds(user.getUserId(),"-"+orderPrice);
+
+                    for( Book b : selectedBooks ) {
+                        b.setQuantity( Integer.parseInt(b.getQuantity())-1 + "" );
+                        _bookRepo.editBook(b,b.getQuantity(),b.getPrice());
+                    }
+
+                    JOptionPane.showMessageDialog(UserOrderForm.this, "Order confirmed!");
+                    selectedBooks.clear();
+                    dispose();
+                }
             }
         });
 
@@ -92,10 +123,8 @@ public class UserOrderForm extends JDialog {
 
     public void updateOrderList(List<Book> books) {
         bookListModel = new DefaultListModel<>();
-        System.out.println("ORDER BOOKS: ");
         for (Book book : books) {
             bookListModel.addElement(book);
-            System.out.println(book.toString());
         }
         orderList.setModel(bookListModel);
     }
@@ -108,6 +137,6 @@ public class UserOrderForm extends JDialog {
                 new Book("C", "C", "C", "C", "C", "C")
         );
 
-        new UserOrderForm(null, null, books, new OrderRepo());
+        new UserOrderForm(null, null, books, new OrderRepo(), new UserRepo(), new BookRepo());
     }
 }

@@ -68,7 +68,7 @@ public class AdminForm extends JDialog
         _bookRepo = bookRepo;
         _orderRepo = orderRepo;
         userCountLabel.setText(_userRepo.countUsers());
-        orderCount.setText(_orderRepo.countOrders());
+        orderCount.setText(_orderRepo.countOrdersPerLibrary(root.getID()));
         btnSearch.addActionListener(new ActionListener()
         {
             @Override
@@ -102,6 +102,7 @@ public class AdminForm extends JDialog
                     System.out.println();
                 }
                 ViewOrdersForm viewOrdersForm = new ViewOrdersForm(AdminForm.this, _orderRepo.getOrdersByLibraryId(root.getID()), AdminForm.root, _orderRepo);
+                orderCount.setText(_orderRepo.countOrdersPerLibrary(root.getID()));
             }
         });
         this._userRepo = new UserRepo();

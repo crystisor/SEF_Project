@@ -9,7 +9,7 @@ import java.util.List;
 public interface IOrderRepo {
 
     int createOrder(String userId, List<Book> books);
-    String countOrders();
+    String countOrdersPerLibrary(String LibraryID);
 
     List<Order> getOrdersByLibraryId(String libraryID);
 

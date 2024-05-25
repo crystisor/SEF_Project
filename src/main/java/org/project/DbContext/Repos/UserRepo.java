@@ -144,7 +144,7 @@ public class UserRepo extends DbConfig implements IUserRepo {
 
             if (rs.next()) {
                 String currentBalanceStr = rs.getString("balance");
-                double currentBalance = Double.parseDouble(currentBalanceStr);
+                double currentBalance = currentBalanceStr==null ? 0 : Double.parseDouble(currentBalanceStr);
                 double addedFundsValue = Double.parseDouble(addedFunds);
                 double newBalance = currentBalance + addedFundsValue;
                 String newBalanceStr = String.valueOf(newBalance);
