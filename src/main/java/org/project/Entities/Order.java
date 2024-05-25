@@ -12,6 +12,13 @@ public class Order
     private String userID;
     private String feedback;
 
+    public Order(String orderID, String userID, String feedback, String date) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.feedback = feedback;
+        this.date = date;
+    }
+
     public Order()
     {
 

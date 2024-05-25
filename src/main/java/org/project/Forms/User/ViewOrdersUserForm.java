@@ -14,7 +14,7 @@ import java.util.List;
 public class ViewOrdersUserForm extends JDialog {
 
     private JPanel viewOrdersPanel;
-    private JTable ordersTable;
+    public JTable ordersTable;
     private JButton btnCancel;
     private static final String[] columnNames = {"Order ID", "Date", "Feedback"};
     private static String[][] rows;
