@@ -37,11 +37,6 @@ public class ImageRenderer extends JLabel implements TableCellRenderer {
             setBackground(table.getBackground());
         }
 
-        setFont(table.getFont());
-        setText((value == null) ? "" : value.toString());
-        setSize(table.getColumnModel().getColumn(column).getWidth(), getPreferredSize().height);
-
-
         return this;
     }
 }
