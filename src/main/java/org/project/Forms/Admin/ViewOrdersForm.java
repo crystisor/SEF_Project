@@ -167,6 +167,8 @@ public class ViewOrdersForm extends JDialog {
 
     public static String[][] listToArrayOfStrings(List<Order> orders)
     {
+        int count = 0;
+
         String[][] arr = new String[orders.size()][4];
         for (int i = 0; i < orders.size(); i++)
         {
@@ -174,6 +176,7 @@ public class ViewOrdersForm extends JDialog {
             {
                 if ( order.getFeedback().equals("Pending") )
                 {
+                    count++;
                     arr[i][0] = order.getOrderID();
                     arr[i][1] = order.getDate();
                     arr[i][2] = order.getBooks().stream()
@@ -183,7 +186,10 @@ public class ViewOrdersForm extends JDialog {
                 }
             }
         }
-        return arr;
+        if (count == orders.size())
+            return arr;
+        else
+            return null;
     }
 
 }

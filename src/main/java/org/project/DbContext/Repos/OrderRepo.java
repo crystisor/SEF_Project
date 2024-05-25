@@ -115,7 +115,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         {
             Connection conn =DriverManager.getConnection(dbURL, dbUser, dbPassword);
             Statement getOrdersStatement = conn.createStatement();
-            String getOrdersQuery = "SELECT ID_order, User_id, Date FROM Orders";
+            String getOrdersQuery = "SELECT ID_order, User_id, Date, Feedback FROM Orders";
             ResultSet rs = getOrdersStatement.executeQuery(getOrdersQuery);
 
             while (rs.next())
@@ -124,6 +124,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 order.setOrderID(rs.getString("ID_order"));
                 order.setUserID(rs.getString("User_id"));
                 order.setDate(rs.getString("Date"));
+                order.setFeedback(rs.getString("Feedback"));
 
                 Statement getOrderDetailsStatement = conn.createStatement();
                 String getOrderDetailsQuery = "SELECT BookID FROM OrderDetails WHERE OrderDetails.Library_id = '" + libraryID + "' AND OrderDetails.OrderID = '" + order.getOrderID() + "'" ;
