@@ -10,18 +10,20 @@ public class User {
     String address;
     String phone;
     String password;
+    String balance;
 
     public String getUserId() {
         return userId;
     }
 
-    public User(String firstName, String lastName, String email, String address, String phone, String password) {
+    public User(String firstName, String lastName, String email, String address, String phone, String password,String balance) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address = address;
         this.phone = phone;
         this.password = password;
+        this.balance = balance;
     }
 
     public int isValidUser(){
@@ -40,6 +42,14 @@ public class User {
             return 4;
         }
         return 0;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 
     public String getFirstName() {

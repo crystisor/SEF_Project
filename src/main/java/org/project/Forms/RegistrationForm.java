@@ -38,8 +38,9 @@ public class RegistrationForm extends JDialog{
         btnRegister.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                registerUser();
-                dispose();
+
+                if( registerUser() )
+                    dispose();
                 //LoginForm loginFormForm = new LoginForm(LoginForm.this);
             }
         });
@@ -55,7 +56,7 @@ public class RegistrationForm extends JDialog{
     }
 
     boolean registered;
-    private void registerUser()
+    private boolean registerUser()
     {
         String firstName = tfFirstName.getText();
         String lastName = tfLastName.getText();
@@ -70,12 +71,12 @@ public class RegistrationForm extends JDialog{
         {
             encryptedPassword = PasswordUtil.hashPassword(password);
 
-            User user = new User(firstName, lastName, email, address, phone, password);
+            User user = new User(firstName, lastName, email, address, phone, password, "0");
 
             if (user.isValidUser() != 0)
             {
                 JOptionPane.showMessageDialog(this, "Please enter valid data " + user.isValidUser(), "Try again", JOptionPane.ERROR_MESSAGE);
-                return;
+                return false;
             }
 
             if (!password.equals(confirmPassword))
@@ -83,7 +84,7 @@ public class RegistrationForm extends JDialog{
                 JOptionPane.showMessageDialog(this,
                         "Passwords do not match",
                         "Try again", JOptionPane.ERROR_MESSAGE);
-                return;
+                return false;
             }
 
            registered = _userRepo.addNewUser(user,encryptedPassword);
@@ -92,6 +93,7 @@ public class RegistrationForm extends JDialog{
         {
             e.printStackTrace();
         }
+        return true;
     }
 
     public static void main(String[] args) {

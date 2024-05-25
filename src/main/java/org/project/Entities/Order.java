@@ -3,17 +3,27 @@ package org.project.Entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Order {
+public class Order
+{
 
     private String orderID;
     private String date;
     private List<Book> books;
     private String userID;
+    private String feedback;
+
+    public Order(String orderID, String userID, String feedback, String date) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.feedback = feedback;
+        this.date = date;
+    }
 
     public Order()
     {
 
     }
+
     public String getOrderID()
     {
         return orderID;
@@ -64,5 +74,15 @@ public class Order {
 
         Order order = (Order) o;
         return orderID.equals(order.getOrderID());
+    }
+
+    public String getFeedback()
+    {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback)
+    {
+        this.feedback = feedback;
     }
 }

@@ -3,6 +3,7 @@ package org.project.DbContext.Repos;
 import org.project.DbContext.DbConfig;
 import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.Entities.Book;
+import org.project.Entities.Feedback;
 import org.project.Entities.Library;
 import org.project.Entities.Order;
 
@@ -16,7 +17,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
     public int createOrder(String userId,List<Book> books) {
 
         int orderId = -1;
-        String insertOrderSQL = "INSERT INTO `Orders` (User_id, Date) VALUES (?, ?)";
+        String insertOrderSQL = "INSERT INTO `Orders` (User_id, Date, Feedback) VALUES (?, ?, ?)";
 
         try (
 
@@ -25,6 +26,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
 
             orderStatement.setString(1, userId);
             orderStatement.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            orderStatement.setString(3, "Pending");
             int rowsAffected = orderStatement.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -75,36 +77,33 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         return success;
     }
 
-
-    public String countOrders()
-    {
-        int orderCount = -1;
+    public String countOrdersPerLibrary(String libraryId) {
+        int orderCount = 0;
         try {
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-            Statement st = conn.createStatement();
-            String query = "SELECT COUNT(*) AS orderCount FROM Orders";
+            // Query to count distinct OrderIDs from OrderDetails and check matching orders in Order table with Feedback='Pending'
+            String query = "SELECT COUNT(DISTINCT od.OrderID) AS orderCount " +
+                    "FROM OrderDetails od " +
+                    "JOIN `Orders` o ON od.OrderID = o.ID_order " +
+                    "WHERE od.Library_id = ? AND o.Feedback = 'Pending'";
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.setString(1, libraryId);
+            ResultSet rs = ps.executeQuery();
 
-            ResultSet rs = st.executeQuery(query);
-            if (rs.next())
-            {
+            if (rs.next()) {
                 orderCount = rs.getInt("orderCount");
-                System.out.println("Number of orders: " + orderCount);
-            } else
-            {
-                System.out.println("No orders found");
             }
 
             rs.close();
-            st.close();
+            ps.close();
             conn.close();
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return "Orders: " + orderCount;
     }
+
 
     public List<Order> getOrdersByLibraryId(String libraryID)
     {
@@ -113,7 +112,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
         {
             Connection conn =DriverManager.getConnection(dbURL, dbUser, dbPassword);
             Statement getOrdersStatement = conn.createStatement();
-            String getOrdersQuery = "SELECT ID_order, User_id, Date FROM Orders";
+            String getOrdersQuery = "SELECT ID_order, User_id, Date, Feedback FROM Orders";
             ResultSet rs = getOrdersStatement.executeQuery(getOrdersQuery);
 
             while (rs.next())
@@ -122,6 +121,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                 order.setOrderID(rs.getString("ID_order"));
                 order.setUserID(rs.getString("User_id"));
                 order.setDate(rs.getString("Date"));
+                order.setFeedback(rs.getString("Feedback"));
 
                 Statement getOrderDetailsStatement = conn.createStatement();
                 String getOrderDetailsQuery = "SELECT BookID FROM OrderDetails WHERE OrderDetails.Library_id = '" + libraryID + "' AND OrderDetails.OrderID = '" + order.getOrderID() + "'" ;
@@ -164,7 +164,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
     public List<Order> getOrdersByUserId(String userId) {
         List<Order> orders = new ArrayList<>();
 
-        String getOrdersQuery = "SELECT ID_order, User_id, Date FROM Orders WHERE User_id = ?";
+        String getOrdersQuery = "SELECT ID_order, User_id, Date, Feedback FROM Orders WHERE User_id = ?";
 
         try (
                 Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
@@ -178,6 +178,7 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
                     order.setOrderID(rs.getString("ID_order"));
                     order.setUserID(rs.getString("User_id"));
                     order.setDate(rs.getString("Date"));
+                    order.setFeedback(rs.getString("Feedback"));
                     orders.add(order);
                 }
             }
@@ -224,30 +225,52 @@ public class OrderRepo extends DbConfig implements IOrderRepo {
 
     public void sendUserFeedback(int orderID, String feedback)
     {
-        try
-        {
+        try {
+
             Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-            Statement selectUser = conn.createStatement();
-            String selectUserQuery = "SELECT User_id from Orders WHERE Orders.ID_order =" + orderID;
-            ResultSet rs = selectUser.executeQuery(selectUserQuery);
+            String insertFeedbackQuery = "UPDATE Orders SET Feedback = ? WHERE ID_order = ?";
 
-            while (rs.next())
+            PreparedStatement updateStmt = conn.prepareStatement(insertFeedbackQuery);
+            updateStmt.setString(1, feedback);
+            updateStmt.setInt(2, orderID);
+
+            int rowsAffected = updateStmt.executeUpdate();
+            if (rowsAffected > 0)
             {
-                String updateFeedbackQuery = "INSERT INTO Feedbacks (Text, User_id) VALUES (?, ?)";
-
-                PreparedStatement updateUser = conn.prepareStatement(updateFeedbackQuery);
-                updateUser.setString(1, feedback);
-                updateUser.setString(2, rs.getString(1));
-                updateUser.executeUpdate();
-
+                System.out.println("Feedback inserted successfully.");
             }
 
+            updateStmt.close();
+            conn.close();
         }
         catch (SQLException e)
         {
             e.printStackTrace();
         }
+    }
+
+    public List<Feedback> getFeedbacks(String userId)
+    {
+        List<Feedback> feedbacks = new ArrayList<>();
+        try
+        {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            Statement selectFeedback = conn.createStatement();
+            String selectFeedbackQuery = "SELECT * FROM Feedbacks WHERE User_id = '" + userId + "'";
+            ResultSet rs = selectFeedback.executeQuery(selectFeedbackQuery);
+            while (rs.next())
+            {
+                Feedback feedback = new Feedback(rs.getString("User_id"), rs.getString("Order_id"), rs.getString("Date"), rs.getString("Text"));
+                feedbacks.add(feedback);
+            }
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return feedbacks;
     }
 }
 

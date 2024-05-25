@@ -7,6 +7,8 @@ import org.project.DbContext.Repos.OrderRepo;
 import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Library;
 import org.project.Entities.User;
+import org.project.Forms.Admin.AdminForm;
+import org.project.Forms.User.UserForm;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,9 +52,11 @@ public class LoginForm extends JDialog{
             }
         });
 
-        btnLogin.addActionListener(new ActionListener() {
+        btnLogin.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 String email = tfEmail.getText();
                 String password = String.valueOf(pfPassword.getPassword());
 

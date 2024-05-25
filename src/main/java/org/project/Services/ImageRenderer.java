@@ -7,13 +7,13 @@ import java.io.File;
 
 public class ImageRenderer extends JLabel implements TableCellRenderer {
 
+
     public ImageRenderer() {
         setOpaque(true);
     }
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-
         if (value != null && value instanceof String) {
             String path = (String) value;
             ImageIcon imageIcon = new ImageIcon(path);
@@ -28,6 +28,15 @@ public class ImageRenderer extends JLabel implements TableCellRenderer {
             setText("No Image");
             setIcon(null);
         }
+
+        if (isSelected) {
+            setForeground(table.getSelectionForeground());
+            setBackground(table.getSelectionBackground());
+        } else {
+            setForeground(table.getForeground());
+            setBackground(table.getBackground());
+        }
+
         return this;
     }
 }
