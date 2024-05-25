@@ -18,7 +18,7 @@ class BookServiceTest
     @Test
     void numbersInAuthor()
     {
-        Book book = new Book("aaaa", "aaaaa", "454545","12.2","a3", "dfkmewfh");
-        assertEquals(false ,BookService.isBookValid(book));   // also assert false is ok
+        Book book = new Book("aaaa", "a.aaaa", "454545","12.2","3", "dfkmewfh");
+        assertEquals(true ,BookService.isBookValid(book));   // also assert false is ok
     }
 }

@@ -166,9 +166,11 @@ public class AdminForm extends JDialog
 
     }
 
-    public static void main(String[] args)
+    /*public static void main(String[] args)
     {
         Library lib = new Library("1","corina","aaaaa","aaaa","aaaa");
         AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo(), new OrderRepo());
     }
+    */
+
 }
