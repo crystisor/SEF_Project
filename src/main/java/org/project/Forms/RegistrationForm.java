@@ -70,7 +70,7 @@ public class RegistrationForm extends JDialog{
         {
             encryptedPassword = PasswordUtil.hashPassword(password);
 
-            User user = new User(firstName, lastName, email, address, phone, password);
+            User user = new User(firstName, lastName, email, address, phone, password, "0");
 
             if (user.isValidUser() != 0)
             {

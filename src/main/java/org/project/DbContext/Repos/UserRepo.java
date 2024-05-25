@@ -64,7 +64,7 @@ public class UserRepo extends DbConfig implements IUserRepo {
                 if (PasswordUtil.checkPassword(password, rs.getString("password"))) {
                     user = new User(rs.getString("first_name"), rs.getString("last_name"),
                             rs.getString("email"), rs.getString("address"),rs.getString("phone_number"),
-                            rs.getString("password"));
+                            rs.getString("password"),rs.getString("balance"));
                     user.setUserId(rs.getString("id"));
                 }
             }
@@ -128,5 +128,45 @@ public class UserRepo extends DbConfig implements IUserRepo {
             e.printStackTrace();
         }
         return ("Active users: " + userCount);
+    }
+
+    @Override
+    public boolean updateUserFunds(String id, String addedFunds) {
+
+        try {
+            Connection conn = DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+            String selectQuery = "SELECT balance FROM Users WHERE id = ?";
+            PreparedStatement selectPs = conn.prepareStatement(selectQuery);
+            selectPs.setString(1, id);
+            ResultSet rs = selectPs.executeQuery();
+
+            if (rs.next()) {
+                String currentBalanceStr = rs.getString("balance");
+                double currentBalance = Double.parseDouble(currentBalanceStr);
+                double addedFundsValue = Double.parseDouble(addedFunds);
+                double newBalance = currentBalance + addedFundsValue;
+                String newBalanceStr = String.valueOf(newBalance);
+
+                String updateQuery = "UPDATE Users SET balance = ? WHERE id = ?";
+                PreparedStatement updatePs = conn.prepareStatement(updateQuery);
+                updatePs.setString(1, newBalanceStr);
+                updatePs.setString(2, id);
+                int rowsUpdated = updatePs.executeUpdate();
+
+                selectPs.close();
+                updatePs.close();
+                conn.close();
+
+                return rowsUpdated > 0;
+            } else {
+                selectPs.close();
+                conn.close();
+                return false;  // User not found
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

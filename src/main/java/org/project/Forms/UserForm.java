@@ -5,6 +5,7 @@ import org.project.DbContext.Interfaces.ILibraryRepo;
 import org.project.DbContext.Repos.BookRepo;
 import org.project.DbContext.Repos.LibraryRepo;
 import org.project.DbContext.Repos.OrderRepo;
+import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Services.BookListCellRenderer;
 import org.project.Entities.User;
@@ -123,7 +124,7 @@ public class UserForm extends JDialog {
         });
 
         addFunds.addActionListener( e -> {
-                CardForm cardForm = new CardForm(this);
+                CardForm cardForm = new CardForm(this, user.getUserId(), new UserRepo());
         });
 
         setVisible(true);
@@ -140,7 +141,7 @@ public class UserForm extends JDialog {
 
     public static void main(String[] args) {
 
-        User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as");
+        User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as","10");
         u.setUserId("39");
         SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo()));
     }
