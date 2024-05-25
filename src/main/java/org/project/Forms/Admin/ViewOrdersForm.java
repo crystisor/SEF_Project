@@ -55,29 +55,42 @@ public class ViewOrdersForm extends JDialog {
         JPanel buttonsPanel = new JPanel(new FlowLayout());
         btnAccept = new JButton("Accept");
         btnReject = new JButton("Reject");
-        btnAccept.addActionListener(new ActionListener() {
+
+        btnAccept.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 int row = ordersTable.getSelectedRow();   // get index
-                if (row != -1) {
+                if (row != -1)
+                {
                     TableModel model = ordersTable.getModel(); // get record
-                    if (model instanceof DefaultTableModel) {
+                    if (model instanceof DefaultTableModel)
+                    {
                         DefaultTableModel defaultTableModel = (DefaultTableModel) model;
 
-                        if (defaultTableModel.getValueAt(row, 0) != null) {
+                        if (defaultTableModel.getValueAt(row, 0) != null)
+                        {
                             int orderID = Integer.parseInt(defaultTableModel.getValueAt(row, 0).toString());
-                            _orderRepo.deleteOrder(orderID);
+                            _orderRepo.sendUserFeedback(orderID, "In delivery");
+                            //_orderRepo.deleteOrder(orderID);
                             defaultTableModel.removeRow(row);
-                        } else {
+                        }
+                        else
+                        {
                             JOptionPane.showMessageDialog(ViewOrdersForm.this,
                                     "Selected record is null",
                                     "Try again",
                                     JOptionPane.ERROR_MESSAGE);
                         }
-                    } else {
+                    }
+                    else
+                    {
                         System.out.println("The table model is not a DefaultTableModel");
                     }
-                } else {
+                }
+                else
+                {
                     JOptionPane.showMessageDialog(ViewOrdersForm.this,
                             "Select a record",
                             "Try again",
@@ -87,18 +100,22 @@ public class ViewOrdersForm extends JDialog {
         });
         buttonsPanel.add(btnAccept);
 
-        btnReject.addActionListener(new ActionListener() {
+        btnReject.addActionListener(new ActionListener()
+        {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e)
+            {
                 int row = ordersTable.getSelectedRow();   // get index
                 if (row == -1)
                     JOptionPane.showMessageDialog(ViewOrdersForm.this,
                             "Select a record",
                             "Try again",
                             JOptionPane.ERROR_MESSAGE);
-                else {
+                else
+                {
                     TableModel model = ordersTable.getModel(); // get record
-                    if (model instanceof DefaultTableModel) {
+                    if (model instanceof DefaultTableModel)
+                    {
                         DefaultTableModel defaultTableModel = (DefaultTableModel) model;
 
                         if (defaultTableModel.getValueAt(row, 0) == null)
@@ -106,7 +123,8 @@ public class ViewOrdersForm extends JDialog {
                                     "Selected record is null",
                                     "Try again",
                                     JOptionPane.ERROR_MESSAGE);
-                        else {
+                        else
+                        {
                             JPanel feedbackPanel = new JPanel();
                             feedbackPanel.setLayout(new BoxLayout(feedbackPanel, BoxLayout.Y_AXIS));
 
@@ -115,17 +133,23 @@ public class ViewOrdersForm extends JDialog {
                             feedbackPanel.add(feedbackLabel);
                             feedbackPanel.add(feedbackTf);
                             int result = JOptionPane.showConfirmDialog(null, feedbackPanel,
-                                    "Edit Book Details", JOptionPane.OK_CANCEL_OPTION);
+                                    "Feedback", JOptionPane.OK_CANCEL_OPTION);
 
-                            int orderID = Integer.parseInt(defaultTableModel.getValueAt(row, 0).toString());
-                            _orderRepo.deleteOrder(orderID);
-                            defaultTableModel.removeRow(row);
-                            if (result == JOptionPane.OK_OPTION) {
-                                _orderRepo.sendUserFeedback(orderID, feedbackTf.getText());
-                            } else
+                            if (result == JOptionPane.OK_OPTION)
+                            {
+                                int orderID = Integer.parseInt(defaultTableModel.getValueAt(row, 0).toString());
+                                if (!feedbackTf.getText().isEmpty())
+                                    _orderRepo.sendUserFeedback(orderID, feedbackTf.getText());
+                                else
+                                    _orderRepo.sendUserFeedback(orderID, "Rejected");
+                                //_orderRepo.deleteOrder(orderID);
+                                defaultTableModel.removeRow(row);
+                            }
+                            else
                                 dispose();
                         }
-                    } else
+                    }
+                    else
                         System.out.println("The table model is not a DefaultTableModel");
                 }
             }
@@ -141,9 +165,11 @@ public class ViewOrdersForm extends JDialog {
         setVisible(true);
     }
 
-    public static String[][] listToArrayOfStrings(List<Order> orders) {
+    public static String[][] listToArrayOfStrings(List<Order> orders)
+    {
         String[][] arr = new String[orders.size()][4];
-        for (int i = 0; i < orders.size(); i++) {
+        for (int i = 0; i < orders.size(); i++)
+        {
             Order order = orders.get(i);
             {
                 arr[i][0] = order.getOrderID();
