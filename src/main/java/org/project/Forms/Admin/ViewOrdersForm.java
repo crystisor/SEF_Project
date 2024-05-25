@@ -192,8 +192,6 @@ public class ViewOrdersForm extends JDialog {
                     arr[index][3] = order.getBooks().get(0).getImage_url();
                     index++;
                 }
-                else
-                    arr[i] = null;
             }
             return arr;
         }
