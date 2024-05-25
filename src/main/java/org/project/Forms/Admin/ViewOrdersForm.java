@@ -2,8 +2,8 @@ package org.project.Forms.Admin;
 
 import org.project.DbContext.Interfaces.IOrderRepo;
 import org.project.Entities.Library;
-import org.project.Entities.Order;
 import org.project.Entities.Book;
+import org.project.Entities.Order;
 import org.project.Services.ImageRenderer;
 import org.project.Services.MultilineCellRenderer;
 
@@ -172,7 +172,7 @@ public class ViewOrdersForm extends JDialog {
         {
             Order order = orders.get(i);
             {
-                if (order.getFeedback() == "Pending")
+                if ( order.getFeedback().equals("Pending") )
                 {
                     arr[i][0] = order.getOrderID();
                     arr[i][1] = order.getDate();
