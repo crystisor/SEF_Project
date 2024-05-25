@@ -5,6 +5,7 @@ import org.project.Entities.Library;
 import org.project.Entities.Order;
 import org.project.Entities.Book;
 import org.project.Services.ImageRenderer;
+import org.project.Services.MultilineCellRenderer;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -41,10 +42,11 @@ public class ViewOrdersForm extends JDialog {
 
         ordersTable = new JTable(tableModel);
         ordersTable.setRowHeight(60);
-        ordersTable.getColumnModel().getColumn(0).setPreferredWidth(20);
-        ordersTable.getColumnModel().getColumn(1).setPreferredWidth(120);
-        ordersTable.getColumnModel().getColumn(2).setPreferredWidth(300);
+        ordersTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        ordersTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        ordersTable.getColumnModel().getColumn(2).setPreferredWidth(120);
         ordersTable.getColumnModel().getColumn(3).setCellRenderer(new ImageRenderer());
+        ordersTable.getColumnModel().getColumn(2).setCellRenderer(new MultilineCellRenderer());
 
         JScrollPane scrollPane = new JScrollPane(ordersTable);
         viewOrdersPanel.setLayout(new BorderLayout());
@@ -65,6 +67,7 @@ public class ViewOrdersForm extends JDialog {
                         if (defaultTableModel.getValueAt(row, 0) != null) {
                             int orderID = Integer.parseInt(defaultTableModel.getValueAt(row, 0).toString());
                             _orderRepo.deleteOrder(orderID);
+                            defaultTableModel.removeRow(row);
                         } else {
                             JOptionPane.showMessageDialog(ViewOrdersForm.this,
                                     "Selected record is null",
@@ -115,7 +118,8 @@ public class ViewOrdersForm extends JDialog {
                                     "Edit Book Details", JOptionPane.OK_CANCEL_OPTION);
 
                             int orderID = Integer.parseInt(defaultTableModel.getValueAt(row, 0).toString());
-                            //_orderRepo.deleteOrder(orderID);
+                            _orderRepo.deleteOrder(orderID);
+                            defaultTableModel.removeRow(row);
                             if (result == JOptionPane.OK_OPTION) {
                                 _orderRepo.sendUserFeedback(orderID, feedbackTf.getText());
                             } else
@@ -152,4 +156,5 @@ public class ViewOrdersForm extends JDialog {
         }
         return arr;
     }
+
 }
