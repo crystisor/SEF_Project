@@ -1,65 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.project.Forms.CardForm">
-  <grid id="27dc6" binding="cardPanel" layout-manager="GridLayoutManager" row-count="6" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+  <grid id="27dc6" binding="cardPanel" layout-manager="GridLayoutManager" row-count="8" column-count="8" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="587" height="400"/>
+      <xy x="20" y="20" width="649" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-3684917"/>
+    </properties>
     <border type="none"/>
     <children>
       <component id="39c6a" class="javax.swing.JLabel" binding="cardLabel">
         <constraints>
-          <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="2" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial Black" size="12" style="1"/>
           <text value="Introduce credit card information"/>
         </properties>
       </component>
-      <component id="751c6" class="javax.swing.JTextField" binding="tfNumber">
-        <constraints>
-          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font name="Arial Black" size="12" style="1"/>
-        </properties>
-      </component>
-      <component id="1ca61" class="javax.swing.JTextField" binding="tfOwner">
-        <constraints>
-          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font name="Arial Black" size="12" style="1"/>
-        </properties>
-      </component>
-      <component id="4175b" class="javax.swing.JTextField" binding="tfExp">
-        <constraints>
-          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font name="Arial Black" size="12" style="1"/>
-        </properties>
-      </component>
-      <component id="8557a" class="javax.swing.JTextField" binding="tfCVV">
-        <constraints>
-          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font name="Arial Black" size="12" style="1"/>
-        </properties>
-      </component>
       <component id="6997d" class="javax.swing.JLabel" binding="codeLabel">
         <constraints>
-          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial Black" size="12" style="1"/>
@@ -68,7 +30,7 @@
       </component>
       <component id="2c462" class="javax.swing.JLabel" binding="nameLabel">
         <constraints>
-          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial Black" size="12" style="1"/>
@@ -77,7 +39,7 @@
       </component>
       <component id="a62ef" class="javax.swing.JLabel" binding="expLabel">
         <constraints>
-          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <font name="Arial Black" size="12" style="1"/>
@@ -86,42 +48,115 @@
       </component>
       <component id="c46ef" class="javax.swing.JLabel" binding="secLabel">
         <constraints>
-          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-16777216"/>
+          <enabled value="true"/>
           <font name="Arial Black" size="12" style="1"/>
           <text value="CVV"/>
         </properties>
       </component>
       <component id="9c63" class="javax.swing.JLabel" binding="amountLabel">
         <constraints>
-          <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="2" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-16777216"/>
+          <enabled value="true"/>
           <font name="Arial Black" size="12" style="1"/>
           <text value="Introduce amount"/>
         </properties>
       </component>
-      <component id="f5060" class="javax.swing.JTextField" binding="tfAmount">
-        <constraints>
-          <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-            <preferred-size width="150" height="-1"/>
-          </grid>
-        </constraints>
-        <properties>
-          <font name="Arial Black" size="12" style="1"/>
-        </properties>
-      </component>
       <hspacer id="84e10">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
       </hspacer>
       <vspacer id="2802e">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="6" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="1" row-span="1" col-span="6" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
         </constraints>
       </vspacer>
+      <component id="2290b" class="javax.swing.JButton" binding="btnConfirm">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16777216"/>
+          <enabled value="true"/>
+          <font name="Arial Black" size="12" style="1"/>
+          <foreground color="-1"/>
+          <text value="Confirm"/>
+        </properties>
+      </component>
+      <component id="d2444" class="javax.swing.JButton" binding="btnCancel">
+        <constraints>
+          <grid row="6" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16777216"/>
+          <enabled value="true"/>
+          <font name="Arial Black" size="12" style="1"/>
+          <foreground color="-1"/>
+          <text value="Cancel"/>
+        </properties>
+      </component>
+      <hspacer id="6a432">
+        <constraints>
+          <grid row="0" column="7" row-span="7" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <vspacer id="9b6f1">
+        <constraints>
+          <grid row="7" column="1" row-span="1" col-span="7" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+      <hspacer id="63997">
+        <constraints>
+          <grid row="0" column="0" row-span="7" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </hspacer>
+      <component id="bf78a" class="javax.swing.JPasswordField" binding="pfCVV">
+        <constraints>
+          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="a1cab" class="javax.swing.JTextField" binding="tfOwner">
+        <constraints>
+          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="ad4ae" class="javax.swing.JTextField" binding="tfNumber">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="e8b8f" class="javax.swing.JTextField" binding="tfExp">
+        <constraints>
+          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
+      <component id="43f58" class="javax.swing.JTextField" binding="tfAmount">
+        <constraints>
+          <grid row="4" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+            <preferred-size width="150" height="-1"/>
+          </grid>
+        </constraints>
+        <properties/>
+      </component>
     </children>
   </grid>
 </form>
