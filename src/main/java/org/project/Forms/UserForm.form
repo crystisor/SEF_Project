@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="507" height="426"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-3684917"/>
+    </properties>
     <border type="none"/>
     <children>
       <component id="30d9f" class="javax.swing.JList" binding="libList">
@@ -15,6 +17,7 @@
           </grid>
         </constraints>
         <properties>
+          <background color="-3684917"/>
           <font name="Arial Black" size="16" style="1"/>
         </properties>
       </component>
@@ -25,6 +28,7 @@
           </grid>
         </constraints>
         <properties>
+          <background color="-3684917"/>
           <font name="Arial Black" size="12" style="1"/>
         </properties>
       </component>
@@ -43,7 +47,9 @@
         <constraints>
           <grid row="5" column="0" row-span="4" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-16777216"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="8651a" class="javax.swing.JButton" binding="orderDetails">
@@ -71,7 +77,9 @@
         <constraints>
           <grid row="9" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <background color="-3684917"/>
+        </properties>
         <border type="none"/>
         <children>
           <component id="b003b" class="javax.swing.JButton" binding="addFunds">
