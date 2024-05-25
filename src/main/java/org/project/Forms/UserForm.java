@@ -66,7 +66,10 @@ public class UserForm extends JDialog {
         bookPanel.add(addBooktoOrder);
         bookPanel.add(Box.createHorizontalStrut(10)); // Add space between buttons
         bookPanel.add(orderDetails);
-        bookPanel.add(Box.createHorizontalStrut(10)); // Add space between buttons
+        bookPanel.add(Box.createHorizontalStrut(200));
+        bookPanel.add(btnOrders, BorderLayout.EAST);
+        bookPanel.add(Box.createHorizontalStrut(10));
+        bookPanel.add(addFunds, BorderLayout.EAST);
 
         userPanel.add(libScrollPane, BorderLayout.WEST);
         userPanel.add(bookScrollPane, BorderLayout.CENTER);
@@ -74,11 +77,7 @@ public class UserForm extends JDialog {
 
         accPanel.setLayout(new BoxLayout(accPanel, BoxLayout.X_AXIS));
         accPanel.add(Icon, BorderLayout.WEST);
-        accPanel.add(Box.createHorizontalStrut(400));
-        accPanel.add(btnOrders, BorderLayout.EAST);
-        accPanel.add(Box.createHorizontalStrut(10));
-        accPanel.add(addFunds, BorderLayout.EAST);
-
+        Icon.setText("Welcome " + user.getFirstName() + " " + user.getLastName() + "!");
         userPanel.add(accPanel, BorderLayout.NORTH);
 
         setContentPane(userPanel);
