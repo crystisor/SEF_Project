@@ -7,11 +7,14 @@ import org.project.DbContext.Repos.LibraryRepo;
 import org.project.DbContext.Repos.OrderRepo;
 import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
+import org.project.Forms.LoginForm;
 import org.project.Services.BookListCellRenderer;
 import org.project.Entities.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class UserForm extends JDialog {
     private JButton btnOrders;
     private JPanel accPanel;
     private JLabel balLabel;
+    private JButton btnLogout;
     IBookRepo _bookRepo;
     ILibraryRepo _libraryRepo;
     //IOrderRepo _orderRepo;
@@ -74,10 +78,10 @@ public class UserForm extends JDialog {
         userPanel.add(bookScrollPane, BorderLayout.CENTER);
         userPanel.add(bookPanel, BorderLayout.SOUTH);
 
-        accPanel.setLayout(new BoxLayout(accPanel, BoxLayout.X_AXIS));
+        accPanel.setLayout(new BoxLayout(accPanel, BoxLayout.Y_AXIS));
         accPanel.add(Icon, BorderLayout.WEST);
-        accPanel.add(Box.createHorizontalStrut(300));
         accPanel.add(balLabel,BorderLayout.EAST);
+        accPanel.add(btnLogout);
 
         Icon.setText("Welcome " + user.getFirstName() + " " + user.getLastName() + "!");
         balLabel.setText("Current balance: " + user.getBalance() + "$");
@@ -131,6 +135,13 @@ public class UserForm extends JDialog {
                 balLabel.setText("Current balance: " + user.getBalance() + "$");
         });
 
+        btnLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                LoginForm loginForm = new LoginForm(null, new UserRepo());
+            }
+        });
         setVisible(true);
     }
 
@@ -145,7 +156,7 @@ public class UserForm extends JDialog {
 
     public static void main(String[] args) {
 
-        User u = new User("gigi","gogu","iov@gmail.com","cuc","0123012444","as","10");
+        User u = new User("uvuvuevuevueonyetnieuenvu","ubuemubuem osas","iov@gmail.com","cuc","0123012444","as","1000000000000.0");
         u.setUserId("39");
         System.out.println(Double.parseDouble(u.getBalance()));
         SwingUtilities.invokeLater(() -> new UserForm(null,u,new BookRepo(), new LibraryRepo()));

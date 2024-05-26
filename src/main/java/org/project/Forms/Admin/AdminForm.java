@@ -9,6 +9,7 @@ import org.project.DbContext.Repos.UserRepo;
 import org.project.Entities.Book;
 import org.project.Entities.Library;
 import org.project.Entities.Order;
+import org.project.Forms.LoginForm;
 import org.project.Services.BookService;
 
 
@@ -34,6 +35,7 @@ public class AdminForm extends JDialog
     private JLabel orderCount;
     private JLabel userCountLabel;
     private JLabel libLabel;
+    private JButton btnLogout;
     private JTextField tfSearch;
     private JTextArea tfaSearch;
     private JTextField tfAddBookName;
@@ -108,6 +110,14 @@ public class AdminForm extends JDialog
         });
         this._userRepo = new UserRepo();
         libLabel.setText("Welcome, " + root.getEmail() + "!");
+
+        btnLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                LoginForm loginForm = new LoginForm(null, new UserRepo());
+            }
+        });
         setVisible(true);
     }
 
@@ -168,11 +178,11 @@ public class AdminForm extends JDialog
 
     }
 
-    /*public static void main(String[] args)
+    public static void main(String[] args)
     {
         Library lib = new Library("1","corina","aaaaa","aaaa","aaaa");
         AdminForm adminForm = new AdminForm(null, lib, new UserRepo(), new BookRepo(), new OrderRepo());
     }
-    */
+
 
 }
