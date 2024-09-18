@@ -23,7 +23,7 @@ This project is a Library Management System, which allows users and managers to 
 ## Installation
 Clone this repository to your local machine:
 
-    git clone https://github.com/yourusername/library-management-system.git
+    git clone https://github.com/crystisor/SEF_Project.git
 
 Navigate into the project directory:
 
