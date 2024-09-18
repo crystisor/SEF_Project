@@ -1,4 +1,4 @@
-# SEF_Project
+# Library Manager Application
 
 
 ## Description
